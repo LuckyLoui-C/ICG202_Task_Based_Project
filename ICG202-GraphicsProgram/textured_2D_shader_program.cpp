@@ -10,7 +10,7 @@ Textured_2D_Shader_Program::~Textured_2D_Shader_Program()
 {
 }
 
-void Textured_2D_Shader_Program::render(const Mesh* mesh, const Texture* texture) const
+void Textured_2D_Shader_Program::render(const Mesh* mesh, const Texture* texture, const Texture* mask, const glm::mat4* transformation) const
 {
 	// Use this program
 	glUseProgram(program());
@@ -34,6 +34,10 @@ void Textured_2D_Shader_Program::render(const Mesh* mesh, const Texture* texture
 	glBindBuffer(GL_ARRAY_BUFFER, tbo_index);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * mesh->texture_coordinates().size(), mesh->texture_coordinates().data(), GL_STATIC_DRAW);
 
+	GLint transformation_location = glGetUniformLocation(program(), "transformation");
+	expect(transformation_location != 1, "Failed to find mask uniform location");
+	glUniformMatrix4fv(transformation_location, 1, GL_FALSE, &(*transformation)[0][0]);
+
 	// Associate 'vertex_texture_coordinates' with the buffer.
 	GLint texture_coordinate_location = glGetAttribLocation(program(), "vertex_texture_coordinate");
 	expect(texture_coordinate_location != -1, "Failed to get texture_coordinate_location");
@@ -55,7 +59,26 @@ void Textured_2D_Shader_Program::render(const Mesh* mesh, const Texture* texture
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	// We put the texture data onto the GPU.
+	// Put the texture data onto the GPU.
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture->width(), texture->height(),
+		0, GL_RGB, GL_UNSIGNED_BYTE, texture->data());
+
+	// Generate 2 texture.
+	GLuint texture_locations[2];
+	glGenTextures(2, texture_locations);
+
+	// Activate first texture.
+	glActiveTexture(GL_TEXTURE0 + 0);
+	glBindTexture(GL_TEXTURE_2D, texture_locations[0]);
+
+	// Assign some data with the texture.
+	// Repeat the image over and over.
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// Put the texture data onto the GPU.
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture->width(), texture->height(),
 		0, GL_RGB, GL_UNSIGNED_BYTE, texture->data());
 
@@ -63,6 +86,26 @@ void Textured_2D_Shader_Program::render(const Mesh* mesh, const Texture* texture
 	GLint image_location = glGetUniformLocation(program(), "image");
 	expect(image_location != -1, "Failed to find image uniform location.");
 	glUniform1i(image_location, 0); // the first texture is 0.
+
+	// Set next texture as focus
+	glActiveTexture(GL_TEXTURE0 + 1);
+	glBindTexture(GL_TEXTURE_2D, texture_locations[1]);
+
+	// Assign some data with the texture.
+	// Repeat the image over and over.
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// We put the texture data onto the GPU.
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mask->width(), mask->height(),
+		0, GL_RGB, GL_UNSIGNED_BYTE, mask->data());
+
+	// Associate 'mask' with the current image (1).
+	GLint mask_location = glGetUniformLocation(program(), "mask");
+	expect(mask_location != -1, "Failed to find mask uniform location.");
+	glUniform1i(mask_location, 1);
 
 	// TODO draw line loop (for fun)
 	glDrawArrays(GL_TRIANGLES, 0, GLsizei(mesh->verticies().size() / 2));

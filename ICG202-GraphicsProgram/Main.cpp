@@ -3,6 +3,11 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <glfw3.h>
+#include <glm/mat4x4.hpp>
+#include <glm/vec3.hpp>
+#include <glm/gtx/transform.hpp>
+#include <math.h>
+#include <time.h>
 
 #include "Triangle_Mesh.h"
 #include "Square_Mesh.h"
@@ -11,7 +16,9 @@
 #include "Shader.h"
 #include "Colored_2D_Shader_Program.h"
 #include "textured_2D_shader_program.h"
+#include "Colored_3D_Shader_Program.h"
 #include "texture.h"
+#include "Cube_Mesh.h"
 
 void gl_debug_message_callback(GLenum, GLenum type, GLuint, GLenum severity,
 	GLsizei, const GLchar * message, const void*)
@@ -45,56 +52,159 @@ int main(void)
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(gl_debug_message_callback, 0);
 
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CW);
+
 	// CPU CODE: C++ -- VS Compiles -- > -- Windows run via CPU
 	// CPU CODE: GLSL -- OpenGL Compiles -- > -- OpenGL run via GPU
 
+							
+	
+	//Square_Mesh* square = new Square_Mesh(); // Square to be filled with colour or texture
+	//Shader* vertex_shader = new Shader("Shaders/textured.2D.vertex_shader.glsl", Shader::Type::Vertex);
+	//Shader* fragment_shader = new Shader("Shaders/textured.2D.fragment_shader.glsl", Shader::Type::Fragment);
+	//Textured_2D_Shader_Program* program = new Textured_2D_Shader_Program(vertex_shader, fragment_shader);
+	//Texture* texture = new Texture("Assets/sprite.airplane.png");
+	//Texture* mask = new Texture("Assets/mask.airplane_background.png");
+
+	Cube_Mesh* cube = new Cube_Mesh();
+	Shader* vertex_shader = new Shader("Shaders/colored.3D.vertex_shader.glsl", Shader::Type::Vertex);
+	Shader* fragment_shader = new Shader("Shaders/colored.3D.fragment_shader.glsl", Shader::Type::Fragment);
+	Colored_3D_Shader_Program* program = new Colored_3D_Shader_Program(vertex_shader, fragment_shader);
 	// Colours for each vertex
 	std::vector<GLfloat> colors =
 	{
-		1.0f, 0.5f, 0.0f, 1.0f, // v1 
-		1.0f, 1.0f, 0.0f, 1.0f, // v2 
-		1.0f, 0.5f, 0.0f, 1.0f, // v3	 
+		// Front Face - Red
+		// triangle 1
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		// triangle 2
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
 
-		1.0f, 0.5f, 0.0f, 1.0f, // v4 
-		1.0f, 0.5f, 0.0f, 1.0f, // v5 
-		1.0f, 1.0f, 0.0f, 1.0f, // v6
+		// Back Face - Blue-Green	 
+		// triangle 1
+		0.0f, 0.5f, 0.5f, 1.0f,
+		0.0f, 0.5f, 0.5f, 1.0f,
+		0.0f, 0.5f, 0.5f, 1.0f,
+		// triangle 2
+		0.0f, 0.5f, 0.5f, 1.0f,
+		0.0f, 0.5f, 0.5f, 1.0f,
+		0.0f, 0.5f, 0.5f, 1.0f,
 
-		1.0f, 0.5f, 0.0f, 1.0f, // v7
-		1.0f, 0.5f, 0.0f, 1.0f, // v8  
-		1.0f, 1.0f, 0.0f, 1.0f, // v9  
+		// Bottom Face - Purple
+		// triangle 1
+		0.120f, 0.13f, 0.200f, 1.0f,
+		0.120f, 0.13f, 0.200f, 1.0f,
+		0.120f, 0.13f, 0.200f, 1.0f,
+		// triangle 2
+		0.120f, 0.13f, 0.200f, 1.0f,
+		0.120f, 0.13f, 0.200f, 1.0f,
+		0.120f, 0.13f, 0.200f, 1.0f,
 
-		1.0f, 1.0f, 0.0f, 1.0f, // v10 
-		1.0f, 0.5f, 0.0f, 1.0f, // v11 
-		1.0f, 0.5f, 0.0f, 1.0f, // v12  
+		// Top Face - Yellow
+		// triangle 1
+		1.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 0.0f, 1.0f,
+		// triangle 2
+		1.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 0.0f, 1.0f,
 
-		1.0f, 1.0f, 0.0f, 1.0f, // v13 
-		1.0f, 0.5f, 0.0f, 1.0f, // v14  
-		1.0f, 0.5f, 0.0f, 1.0f, // v15 
+		// Left Face - Blue
+		// triangle 1
+		0.0f, 0.0f, 1.0f, 1.0f,
+		0.0f, 0.0f, 1.0f, 1.0f,
+		0.0f, 0.0f, 1.0f, 1.0f,
+		// triange 2
+		0.0f, 0.0f, 1.0f, 1.0f,
+		0.0f, 0.0f, 1.0f, 1.0f,
+		0.0f, 0.0f, 1.0f, 1.0f,
 
-		1.0f, 0.5f, 0.0f, 1.0f, // v16 
-		1.0f, 1.0f, 0.0f, 1.0f, // v17  
-		1.0f, 0.5f, 0.0f, 1.0f, // v18 
-	};							
+		// Right Face - Brown
+		// triangle 1
+		0.5f, 0.2f, 0.0f, 1.0f,
+		0.5f, 0.2f, 0.0f, 1.0f,
+		0.5f, 0.2f, 0.0f, 1.0f,
+		// triange 2  
+		0.5f, 0.2f, 0.0f, 1.0f,
+		0.5f, 0.2f, 0.0f, 1.0f,
+		0.5f, 0.2f, 0.0f, 1.0f,
+
+
+	};
+
+	//Hexagon_Mesh* hexagon = new Hexagon_Mesh();
+	//Shader* vertex_shader = new Shader("Shaders/colored.2D.vertex_shader.glsl", Shader::Type::Vertex);
+	//Shader* fragment_shader = new Shader("Shaders/colored.2D.fragment_shader.glsl", Shader::Type::Fragment);
+	//Colored_2D_Shader_Program* program = new Colored_2D_Shader_Program(vertex_shader, fragment_shader);
+
+	// Rotate
+	// Translate
+	// Scale
+
+	// Re-use a mesh over and over
+	// Transform a mesh using the QPU
+	// CPU - floats, integers
+	// GPU - matrix multiplication usin thousands of cores.
+
 	
-	Hexagon_Mesh* hexagon = new Hexagon_Mesh();
+	
 
-	Shader* vertex_shader = new Shader("Shaders/colored.2D.vertex_shader.glsl", Shader::Type::Vertex);
-	Shader* fragment_shader = new Shader("Shaders/colored.2D.fragment_shader.glsl", Shader::Type::Fragment);
-	Colored_2D_Shader_Program* program = new Colored_2D_Shader_Program(vertex_shader, fragment_shader);
-
-	/*Shader* vertex_shader = new Shader("Shaders/textured.2D.vertex_shader.glsl", Shader::Type::Vertex);
-	Shader* fragment_shader = new Shader("Shaders/textured.2D.fragment_shader.glsl", Shader::Type::Fragment);
-	Textured_2D_Shader_Program* program = new Textured_2D_Shader_Program(vertex_shader, fragment_shader);
-	Texture* texture = new Texture("Assets/sprite.airplane.png");*/
-
+	float a = 0.0f;
+	float b = 0.0f;
+	float c = 0.0f;
+	float d = 0.0f;
 	while (true)
 	{
-		program->render(hexagon, &colors);
+		{
+			glm::vec3 translation = glm::vec3(0.5f, 0.f, 0.f);
+			glm::vec3 rotation = glm::vec3(a, b, 0.0f);
+			glm::vec3 scale = glm::vec3(0.25f, 0.25f, 0.25f);
 
+			glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
+			glm::mat4 scale_m = glm::scale(glm::mat4(1.0f), scale);
+
+			glm::mat4 rotation_x = glm::rotate(rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+			glm::mat4 rotation_y = glm::rotate(rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+			glm::mat4 rotation_z = glm::rotate(rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+			glm::mat4 rotation_m = rotation_x * rotation_y * rotation_z;
+
+			glm::mat4 model = translation_m * rotation_m * scale_m;
+
+			program->render(cube, &colors, &model);
+		}		
+		{
+			glm::vec3 translation = glm::vec3(-0.5f, 0.f, sinf(a));
+			glm::vec3 rotation = glm::vec3(c, d, 0.0f);
+			glm::vec3 scale = glm::vec3(0.25f, 0.25f, 0.25f);
+
+			glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
+			glm::mat4 scale_m = glm::scale(glm::mat4(1.0f), scale);
+
+			glm::mat4 rotation_x = glm::rotate(rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+			glm::mat4 rotation_y = glm::rotate(rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+			glm::mat4 rotation_z = glm::rotate(rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+			glm::mat4 rotation_m = rotation_x * rotation_y * rotation_z;
+
+			glm::mat4 model = translation_m * rotation_m * scale_m;
+
+			program->render(cube, &colors, &model);
+		}
+
+		// This renders the objects to the scene
 		glfwSwapBuffers(window);
 		glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glBindVertexArray(0);
 		glUseProgram(0);
+		a += 0.01f;
+		b += 0.02f;
+		c += 0.2f;
+		d += 0.004f;
 	}
 }
