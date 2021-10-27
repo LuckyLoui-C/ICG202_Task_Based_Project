@@ -5,14 +5,14 @@ Hexagonal_Pyramid_Mesh::Hexagonal_Pyramid_Mesh()
 {
 	std::initializer_list<GLfloat> v[8];
 
-	auto v0 = { 0.0f, 0.0f, -1.0f };   // 0
-	auto v1 = { -0.3f, -0.6f, -1.0f }; // 1
-	auto v2 = { -0.6f, 0.0f, -1.0f };  // 2
-	auto v3 = { -0.3f, 0.6f, -1.0f };  // 3
-	auto v4 = { 0.3f, 0.6f, -1.0f };   // 4
-	auto v5 = { 0.6f, 0.0f, -1.0f };   // 5
-	auto v6 = { 0.3f, -0.6f, -1.05f };  // 6
-	auto v7 = {0.0f, 0.0f, 1.0f};	   // 7
+	auto v0 = { 0.0f, 0.0f, 0.0f };   // 0
+	auto v1 = { -0.3f, -0.6f, 0.0f }; // 1
+	auto v2 = { -0.6f, 0.0f, 0.0f };  // 2
+	auto v3 = { -0.3f, 0.6f, 0.0f };  // 3
+	auto v4 = { 0.3f, 0.6f, 0.0f };   // 4
+	auto v5 = { 0.6f, 0.0f, 0.0f };   // 5
+	auto v6 = { 0.3f, -0.6f, 0.0f };  // 6
+	auto v7 = {0.0f, 0.0f, 1.0f};	  // 7
 
 	v[0] = v0;
 	v[1] = v1;
@@ -24,7 +24,8 @@ Hexagonal_Pyramid_Mesh::Hexagonal_Pyramid_Mesh()
 	v[7] = v7;
 
 	// HEXAGON BASE
-	{// T1:
+	{
+		// T1:
 		_verticies.insert(_verticies.end(), v[6]); // 1
 		_verticies.insert(_verticies.end(), v[0]); // 2
 		_verticies.insert(_verticies.end(), v[1]); // 3
@@ -51,12 +52,14 @@ Hexagonal_Pyramid_Mesh::Hexagonal_Pyramid_Mesh()
 	}
 
 	// TRIANGLE SIDE FACES
-	// Triangle Side 1
-	_verticies.insert(_verticies.end(), v1); // v19
-	_verticies.insert(_verticies.end(), v7); // v20
-	_verticies.insert(_verticies.end(), v6); // v21
-
-	for (int i = 1; i <= 7; i++)
+	{
+		// Triangle Side 1
+		_verticies.insert(_verticies.end(), v[1]); // v19
+		_verticies.insert(_verticies.end(), v[7]); // v20
+		_verticies.insert(_verticies.end(), v[6]); // v21
+	}
+	// Create next 5 triangles automatically
+	for (int i = 2; i <= 7; i++)
 	{
 		_verticies.insert(_verticies.end(), v[i]); // v
 		_verticies.insert(_verticies.end(), v[7]); // v

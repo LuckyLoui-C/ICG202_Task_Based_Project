@@ -190,35 +190,35 @@ int main(void)
 		1.0f, 0.0f, 0.0f, 1.0f,
 		1.0f, 0.0f, 0.0f, 1.0f,
 
-		// Triangle Edge 1
+		// Triangle Face 1
 		0.0f, 0.0f, 1.0f, 1.0f,
 		0.0f, 0.0f, 1.0f, 1.0f,
 		0.0f, 0.0f, 1.0f, 1.0f,
 
-		// Triangle Edge 2
+		// Triangle Face 2
+		1.0f, 0.0f, 1.0f, 1.0f,
 		0.0f, 0.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 1.0f,
 
-		// Triangle Edge 3
-		0.0f, 0.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 1.0f,
+		// Triangle Face 3
+		0.0f, 1.0f, 1.0f, 1.0f,
+		0.0f, 1.0f, 1.0f, 1.0f,
+		0.0f, 1.0f, 1.0f, 1.0f,
 
-		// Triangle Edge 4
-		0.0f, 0.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 1.0f,
+		// Triangle Face 4
+		1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f, 1.0f,
 
-		// Triangle Edge 5
-		0.0f, 0.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 1.0f,
+		// Triangle Face 5
+		0.5f, 0.5f, 1.0f, 1.0f,
+		0.5f, 0.5f, 1.0f, 1.0f,
+		0.5f, 0.5f, 1.0f, 1.0f,
 
-		// Triangle Edge 6
+		// Triangle Face 6
+		0.5f, 0.0f, 0.0f, 1.0f,
 		0.0f, 0.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 1.0f,
+		0.5f, 0.0f, 0.0f, 1.0f,
 	};
 
 	Cube_Mesh* cube = new Cube_Mesh();
@@ -265,8 +265,8 @@ int main(void)
 			program->render(cube, &colors, &model);
 		}		
 		{
-			glm::vec3 translation = glm::vec3(-0.5f, 0.f, sinf(a));
-			glm::vec3 rotation = glm::vec3(0.0f, a, 0.0f);
+			glm::vec3 translation = glm::vec3(-0.5f, 0.f, 0.0f);
+			glm::vec3 rotation = glm::vec3(-0.75f, a, 0.0f);
 			glm::vec3 scale = glm::vec3(0.25f, 0.25f, 0.25f);
 
 			glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
