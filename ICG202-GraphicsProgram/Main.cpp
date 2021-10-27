@@ -19,6 +19,7 @@
 #include "Colored_3D_Shader_Program.h"
 #include "texture.h"
 #include "Cube_Mesh.h"
+#include "Hexagonal_Pyramid_Mesh.h"
 
 void gl_debug_message_callback(GLenum, GLenum type, GLuint, GLenum severity,
 	GLsizei, const GLchar * message, const void*)
@@ -68,10 +69,6 @@ int main(void)
 	//Texture* texture = new Texture("Assets/sprite.airplane.png");
 	//Texture* mask = new Texture("Assets/mask.airplane_background.png");
 
-	Cube_Mesh* cube = new Cube_Mesh();
-	Shader* vertex_shader = new Shader("Shaders/colored.3D.vertex_shader.glsl", Shader::Type::Vertex);
-	Shader* fragment_shader = new Shader("Shaders/colored.3D.fragment_shader.glsl", Shader::Type::Fragment);
-	Colored_3D_Shader_Program* program = new Colored_3D_Shader_Program(vertex_shader, fragment_shader);
 	// Colours for each vertex
 	std::vector<GLfloat> colors =
 	{
@@ -137,24 +134,113 @@ int main(void)
 
 
 	};
+	std::vector<GLfloat> hexagon_colors =
+	{
+		// HEXAGON BASE COLORS
+		// triangle 1
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		// triangle 2
+		1.0f, 0.9f, 0.200f, 1.0f,
+		1.0f, 0.9f, 0.200f, 1.0f,
+		1.0f, 0.9f, 0.200f, 1.0f,
+		// triangle 3
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		// triangle 4
+		1.0f, 0.9f, 0.200f, 1.0f,
+		1.0f, 0.9f, 0.200f, 1.0f,
+		1.0f, 0.9f, 0.200f, 1.0f,
+		// triangle 5
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		// triangle 6
+		1.0f, 0.9f, 0.200f, 1.0f,
+		1.0f, 0.9f, 0.200f, 1.0f,
+		1.0f, 0.9f, 0.200f, 1.0f,
+	};
+	std::vector<GLfloat> hexagonal_pyramid_colors =
+	{
+		// HEXAGON BASE COLORS
+		// triangle 1
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		// triangle 2
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		// triangle 3
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		// triangle 4
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		// triangle 5
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		// triangle 6
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f, 1.0f,
 
-	//Hexagon_Mesh* hexagon = new Hexagon_Mesh();
-	//Shader* vertex_shader = new Shader("Shaders/colored.2D.vertex_shader.glsl", Shader::Type::Vertex);
-	//Shader* fragment_shader = new Shader("Shaders/colored.2D.fragment_shader.glsl", Shader::Type::Fragment);
-	//Colored_2D_Shader_Program* program = new Colored_2D_Shader_Program(vertex_shader, fragment_shader);
+		// Triangle Edge 1
+		0.0f, 0.0f, 1.0f, 1.0f,
+		0.0f, 0.0f, 1.0f, 1.0f,
+		0.0f, 0.0f, 1.0f, 1.0f,
 
-	// Rotate
-	// Translate
-	// Scale
+		// Triangle Edge 2
+		0.0f, 0.0f, 1.0f, 1.0f,
+		0.0f, 0.0f, 1.0f, 1.0f,
+		0.0f, 0.0f, 1.0f, 1.0f,
+
+		// Triangle Edge 3
+		0.0f, 0.0f, 1.0f, 1.0f,
+		0.0f, 0.0f, 1.0f, 1.0f,
+		0.0f, 0.0f, 1.0f, 1.0f,
+
+		// Triangle Edge 4
+		0.0f, 0.0f, 1.0f, 1.0f,
+		0.0f, 0.0f, 1.0f, 1.0f,
+		0.0f, 0.0f, 1.0f, 1.0f,
+
+		// Triangle Edge 5
+		0.0f, 0.0f, 1.0f, 1.0f,
+		0.0f, 0.0f, 1.0f, 1.0f,
+		0.0f, 0.0f, 1.0f, 1.0f,
+
+		// Triangle Edge 6
+		0.0f, 0.0f, 1.0f, 1.0f,
+		0.0f, 0.0f, 1.0f, 1.0f,
+		0.0f, 0.0f, 1.0f, 1.0f,
+	};
+
+	Cube_Mesh* cube = new Cube_Mesh();
+	Shader* vertex_shader = new Shader("Shaders/colored.3D.vertex_shader.glsl", Shader::Type::Vertex);
+	Shader* fragment_shader = new Shader("Shaders/colored.3D.fragment_shader.glsl", Shader::Type::Fragment);
+	Colored_3D_Shader_Program* program = new Colored_3D_Shader_Program(vertex_shader, fragment_shader);
+
+	/*Hexagon_Mesh* hexagon = new Hexagon_Mesh();
+	Shader* hexagon_vertex_shader = new Shader("Shaders/colored.3D.vertex_shader.glsl", Shader::Type::Vertex);
+	Shader* hexagon_fragment_shader = new Shader("Shaders/colored.3D.fragment_shader.glsl", Shader::Type::Fragment);
+	Colored_3D_Shader_Program* hexagon_program = new Colored_3D_Shader_Program(hexagon_vertex_shader, hexagon_fragment_shader);*/
+
+	Hexagonal_Pyramid_Mesh* hexagonal_pyramid_mesh = new Hexagonal_Pyramid_Mesh();
+	Shader* pyramid_vertex_shader = new Shader("Shaders/colored.3D.vertex_shader.glsl", Shader::Type::Vertex);
+	Shader* pyramid_fragment_shader = new Shader("Shaders/colored.3D.fragment_shader.glsl", Shader::Type::Fragment);
+	Colored_3D_Shader_Program* pyramid_scheme = new Colored_3D_Shader_Program(pyramid_vertex_shader, pyramid_fragment_shader);
 
 	// Re-use a mesh over and over
-	// Transform a mesh using the QPU
+	// Transform a mesh using the GPU
 	// CPU - floats, integers
 	// GPU - matrix multiplication usin thousands of cores.
-
-	
-	
-
+	 	
 	float a = 0.0f;
 	float b = 0.0f;
 	float c = 0.0f;
@@ -180,7 +266,7 @@ int main(void)
 		}		
 		{
 			glm::vec3 translation = glm::vec3(-0.5f, 0.f, sinf(a));
-			glm::vec3 rotation = glm::vec3(c, d, 0.0f);
+			glm::vec3 rotation = glm::vec3(0.0f, a, 0.0f);
 			glm::vec3 scale = glm::vec3(0.25f, 0.25f, 0.25f);
 
 			glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
@@ -193,7 +279,7 @@ int main(void)
 
 			glm::mat4 model = translation_m * rotation_m * scale_m;
 
-			program->render(cube, &colors, &model);
+			pyramid_scheme->render(hexagonal_pyramid_mesh, &hexagonal_pyramid_colors, &model);
 		}
 
 		// This renders the objects to the scene

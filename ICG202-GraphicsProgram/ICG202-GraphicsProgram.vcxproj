@@ -147,6 +147,7 @@
     <ClCompile Include="Colored_2D_Shader_Program.cpp" />
     <ClCompile Include="Colored_3D_Shader_Program.cpp" />
     <ClCompile Include="Cube_Mesh.cpp" />
+    <ClCompile Include="Hexagonal_Pyramid_Mesh.cpp" />
     <ClCompile Include="Hexagon_Mesh.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="Colored_3D_Shader_Program.h" />
     <ClInclude Include="Cube_Mesh.h" />
     <ClInclude Include="Expectations.h" />
+    <ClInclude Include="Hexagonal_Pyramid_Mesh.h" />
     <ClInclude Include="Hexagon_Mesh.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Shader.h" />

@@ -51,6 +51,9 @@
     <ClCompile Include="Colored_3D_Shader_Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Hexagonal_Pyramid_Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mesh.h">
@@ -87,6 +90,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Colored_3D_Shader_Program.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Hexagonal_Pyramid_Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
