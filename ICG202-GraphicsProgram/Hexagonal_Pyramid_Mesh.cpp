@@ -3,25 +3,16 @@
 
 Hexagonal_Pyramid_Mesh::Hexagonal_Pyramid_Mesh()
 {
-	std::initializer_list<GLfloat> v[8];
+	std::initializer_list<GLfloat> v[8]; // Used to auto-generate faces
 
-	auto v0 = { 0.0f, 0.5f, 0.0f };   // 0
-	auto v1 = { -0.3f, 0.5f, -0.6f }; // 1
-	auto v2 = { -0.6f, 0.5f, 0.0f };  // 2
-	auto v3 = { -0.3f, 0.5f, 0.6f };  // 3
-	auto v4 = { 0.3f, 0.5f, 0.6f };   // 4
-	auto v5 = { 0.6f, 0.5f, 0.0f };   // 5
-	auto v6 = { 0.3f, 0.5f, -0.6f };  // 6
-	auto v7 = {0.0f, -0.6f, 0.0f};	  // 7
-
-	v[0] = v0;
-	v[1] = v1;
-	v[2] = v2;
-	v[3] = v3;
-	v[4] = v4;
-	v[5] = v5;
-	v[6] = v6;
-	v[7] = v7;
+	v[0] = { 0.0f, -0.5f, 0.0f };
+	v[1] = { -0.3f, -0.5f, -0.6f };
+	v[2] = { -0.6f, -0.5f, 0.0f };
+	v[3] = { -0.3f, -0.5f, 0.6f };
+	v[4] = { 0.3f, -0.5f, 0.6f };
+	v[5] = { 0.6f, -0.5f, 0.0f };
+	v[6] = { 0.3f, -0.5f, -0.6f };
+	v[7] = { 0.0f, 0.6f, 0.0f };
 
 	// HEXAGON BASE
 	{
