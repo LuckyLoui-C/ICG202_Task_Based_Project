@@ -53,17 +53,18 @@ Hexagonal_Pyramid_Mesh::Hexagonal_Pyramid_Mesh()
 
 	// TRIANGLE SIDE FACES
 	{
-		// Triangle Side 1
+		// Triangle Side 1 - 3rd vertex is not '1 - 1' so have to do manually
 		_verticies.insert(_verticies.end(), v[1]); // v19
 		_verticies.insert(_verticies.end(), v[7]); // v20
 		_verticies.insert(_verticies.end(), v[6]); // v21
-	}
-	// Create next 5 triangles automatically
-	for (int i = 2; i <= 7; i++)
-	{
-		_verticies.insert(_verticies.end(), v[i]); // v
-		_verticies.insert(_verticies.end(), v[7]); // v
-		_verticies.insert(_verticies.end(), v[(i - 1)]); // 
+
+		// Create next 5 triangles automatically
+		for (int i = 2; i <= 7; i++)
+		{
+			_verticies.insert(_verticies.end(), v[i]); // v
+			_verticies.insert(_verticies.end(), v[7]); // v
+			_verticies.insert(_verticies.end(), v[(i - 1)]); // 
+		}
 	}
 }
 
