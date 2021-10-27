@@ -5,14 +5,14 @@ Hexagonal_Pyramid_Mesh::Hexagonal_Pyramid_Mesh()
 {
 	std::initializer_list<GLfloat> v[8];
 
-	auto v0 = { 0.0f, 0.0f, 0.0f };   // 0
-	auto v1 = { -0.3f, -0.6f, 0.0f }; // 1
-	auto v2 = { -0.6f, 0.0f, 0.0f };  // 2
-	auto v3 = { -0.3f, 0.6f, 0.0f };  // 3
-	auto v4 = { 0.3f, 0.6f, 0.0f };   // 4
-	auto v5 = { 0.6f, 0.0f, 0.0f };   // 5
-	auto v6 = { 0.3f, -0.6f, 0.0f };  // 6
-	auto v7 = {0.0f, 0.0f, 1.0f};	  // 7
+	auto v0 = { 0.0f, 0.5f, 0.0f };   // 0
+	auto v1 = { -0.3f, 0.5f, -0.6f }; // 1
+	auto v2 = { -0.6f, 0.5f, 0.0f };  // 2
+	auto v3 = { -0.3f, 0.5f, 0.6f };  // 3
+	auto v4 = { 0.3f, 0.5f, 0.6f };   // 4
+	auto v5 = { 0.6f, 0.5f, 0.0f };   // 5
+	auto v6 = { 0.3f, 0.5f, -0.6f };  // 6
+	auto v7 = {0.0f, -0.6f, 0.0f};	  // 7
 
 	v[0] = v0;
 	v[1] = v1;

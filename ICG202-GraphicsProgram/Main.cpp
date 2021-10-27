@@ -266,7 +266,7 @@ int main(void)
 		}		
 		{
 			glm::vec3 translation = glm::vec3(-0.5f, 0.f, 0.0f);
-			glm::vec3 rotation = glm::vec3(-0.75f, a, 0.0f);
+			glm::vec3 rotation = glm::vec3(a, a, 0.0f);
 			glm::vec3 scale = glm::vec3(0.25f, 0.25f, 0.25f);
 
 			glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
