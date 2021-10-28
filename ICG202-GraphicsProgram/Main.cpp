@@ -243,10 +243,10 @@ int main(void)
 	float d = 0.0f;
 	while (true)
 	{
-		{
-			glm::vec3 translation = glm::vec3(0.5f, 0.f, 0.f);
+		//{
+			glm::vec3 translation = glm::vec3(0.0f, 0.0f, 0.0f);
 			glm::vec3 rotation = glm::vec3(a, b, 0.0f);
-			glm::vec3 scale = glm::vec3(0.25f, 0.25f, 0.25f);
+			glm::vec3 scale = glm::vec3(0.5f, 0.5f, 0.5f);
 
 			glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
 			glm::mat4 scale_m = glm::scale(glm::mat4(1.0f), scale);
@@ -259,10 +259,10 @@ int main(void)
 			glm::mat4 model = translation_m * rotation_m * scale_m;
 
 			program->render(cube, &colors, &model);
-		}		
+		/*}		
 		{
 			glm::vec3 translation = glm::vec3(-0.5f, 0.f, 0.0f);
-			glm::vec3 rotation = glm::vec3(0.0f, a, 0.0f);
+			glm::vec3 rotation = glm::vec3(a, a, 0.0f);
 			glm::vec3 scale = glm::vec3(0.25f, 0.25f, 0.25f);
 
 			glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
@@ -276,7 +276,7 @@ int main(void)
 			glm::mat4 model = translation_m * rotation_m * scale_m;
 
 			pyramid_scheme->render(hexagonal_pyramid_mesh, &hexagonal_pyramid_colors, &model);
-		}
+		}*/
 
 		// This renders the objects to the scene
 		glfwSwapBuffers(window);
