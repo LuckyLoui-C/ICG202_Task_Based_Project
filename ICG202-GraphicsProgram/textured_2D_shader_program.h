@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Shader_Program.h"
-#include "texture.h"
+#include "Texture.h"
 
 #include <vector>
 #include <glm/mat4x4.hpp>

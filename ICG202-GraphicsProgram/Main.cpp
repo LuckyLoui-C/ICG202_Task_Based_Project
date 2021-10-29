@@ -17,6 +17,7 @@
 #include "Colored_2D_Shader_Program.h"
 #include "textured_2D_shader_program.h"
 #include "Colored_3D_Shader_Program.h"
+#include "Textured_3D_Shader_Program.h"
 #include "texture.h"
 #include "Cube_Mesh.h"
 #include "Hexagonal_Pyramid_Mesh.h"
@@ -216,21 +217,31 @@ int main(void)
 		1.0f, 1.0f, 1.0f, 1.0f,
 		0.0f, 0.0f, 0.1f, 1.0f,
 	};
-
+	
+	/*
 	Cube_Mesh* cube = new Cube_Mesh();
 	Shader* vertex_shader = new Shader("Shaders/colored.3D.vertex_shader.glsl", Shader::Type::Vertex);
 	Shader* fragment_shader = new Shader("Shaders/colored.3D.fragment_shader.glsl", Shader::Type::Fragment);
 	Colored_3D_Shader_Program* program = new Colored_3D_Shader_Program(vertex_shader, fragment_shader);
-
+	*/
 	/*Hexagon_Mesh* hexagon = new Hexagon_Mesh();
 	Shader* hexagon_vertex_shader = new Shader("Shaders/colored.3D.vertex_shader.glsl", Shader::Type::Vertex);
 	Shader* hexagon_fragment_shader = new Shader("Shaders/colored.3D.fragment_shader.glsl", Shader::Type::Fragment);
 	Colored_3D_Shader_Program* hexagon_program = new Colored_3D_Shader_Program(hexagon_vertex_shader, hexagon_fragment_shader);*/
 
 	Hexagonal_Pyramid_Mesh* hexagonal_pyramid_mesh = new Hexagonal_Pyramid_Mesh();
-	Shader* pyramid_vertex_shader = new Shader("Shaders/colored.3D.vertex_shader.glsl", Shader::Type::Vertex);
-	Shader* pyramid_fragment_shader = new Shader("Shaders/colored.3D.fragment_shader.glsl", Shader::Type::Fragment);
-	Colored_3D_Shader_Program* pyramid_scheme = new Colored_3D_Shader_Program(pyramid_vertex_shader, pyramid_fragment_shader);
+	Shader* pyramid_vertex_shader = new Shader("Shaders/textured.3D.vertex_shader.glsl", Shader::Type::Vertex);
+	Shader* pyramid_fragment_shader = new Shader("Shaders/textured.3D.fragment_shader.glsl", Shader::Type::Fragment);
+	Textured_3D_Shader_Program* pyramid_scheme = new Textured_3D_Shader_Program(pyramid_vertex_shader, pyramid_fragment_shader);
+	Texture* hexagonal_pyramid_texture = new Texture("Assets/pyramid.sun.png");
+
+
+	//Cube_Mesh* cube = new Cube_Mesh();
+	//Shader* vertex_shader = new Shader("Shaders/textured.3D.vertex_shader.glsl", Shader::Type::Vertex);
+	//Shader* fragment_shader = new Shader("Shaders/textured.3D.fragment_shader.glsl", Shader::Type::Fragment);
+	//Textured_3D_Shader_Program* program = new Textured_3D_Shader_Program(vertex_shader, fragment_shader);
+	//Texture* cube_texture = new Texture("Assets/ice.sheet.jpg");
+
 
 	// Re-use a mesh over and over
 	// Transform a mesh using the GPU
@@ -245,7 +256,7 @@ int main(void)
 	{
 		//{
 			glm::vec3 translation = glm::vec3(0.0f, 0.0f, 0.0f);
-			glm::vec3 rotation = glm::vec3(a, b, 0.0f);
+			glm::vec3 rotation = glm::vec3(a, 0.0f, 0.0f);
 			glm::vec3 scale = glm::vec3(0.5f, 0.5f, 0.5f);
 
 			glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
@@ -258,7 +269,7 @@ int main(void)
 
 			glm::mat4 model = translation_m * rotation_m * scale_m;
 
-			program->render(cube, &colors, &model);
+			pyramid_scheme->render(hexagonal_pyramid_mesh, hexagonal_pyramid_texture, &model);
 		/*}		
 		{
 			glm::vec3 translation = glm::vec3(-0.5f, 0.f, 0.0f);
