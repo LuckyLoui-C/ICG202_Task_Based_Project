@@ -233,7 +233,7 @@ int main(void)
 	Shader* pyramid_vertex_shader = new Shader("Shaders/textured.3D.vertex_shader.glsl", Shader::Type::Vertex);
 	Shader* pyramid_fragment_shader = new Shader("Shaders/textured.3D.fragment_shader.glsl", Shader::Type::Fragment);
 	Textured_3D_Shader_Program* pyramid_scheme = new Textured_3D_Shader_Program(pyramid_vertex_shader, pyramid_fragment_shader);
-	Texture* hexagonal_pyramid_texture = new Texture("Assets/pyramid.sun.png");
+	Texture* hexagonal_pyramid_texture = new Texture("Assets/moon.base.jpg");
 
 
 	//Cube_Mesh* cube = new Cube_Mesh();
@@ -248,15 +248,15 @@ int main(void)
 	// CPU - floats, integers
 	// GPU - matrix multiplication usin thousands of cores.
 	 	
-	float a = 0.0f;
-	float b = 0.0f;
-	float c = 0.0f;
+	float x = 0.0f;
+	float y = 0.0f;
+	float z = 0.0f;
 	float d = 0.0f;
 	while (true)
 	{
 		//{
 			glm::vec3 translation = glm::vec3(0.0f, 0.0f, 0.0f);
-			glm::vec3 rotation = glm::vec3(a, 0.0f, 0.0f);
+			glm::vec3 rotation = glm::vec3(x, 0.0f, 0.0f);
 			glm::vec3 scale = glm::vec3(0.5f, 0.5f, 0.5f);
 
 			glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
@@ -295,9 +295,9 @@ int main(void)
 		glClear(GL_COLOR_BUFFER_BIT);
 		glBindVertexArray(0);
 		glUseProgram(0);
-		a += 0.01f;
-		b += 0.02f;
-		c += 0.2f;
+		x += 0.05f;
+		y += 0.05f;
+		z += 0.2f;
 		d += 0.004f;
 	}
 }
