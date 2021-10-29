@@ -21,6 +21,7 @@
 #include "texture.h"
 #include "Cube_Mesh.h"
 #include "Hexagonal_Pyramid_Mesh.h"
+#include "Cheese_Wedge_Mesh.h"
 
 void gl_debug_message_callback(GLenum, GLenum type, GLuint, GLenum severity,
 	GLsizei, const GLchar * message, const void*)
@@ -235,6 +236,12 @@ int main(void)
 	Textured_3D_Shader_Program* pyramid_scheme = new Textured_3D_Shader_Program(pyramid_vertex_shader, pyramid_fragment_shader);
 	Texture* hexagonal_pyramid_texture = new Texture("Assets/moon.base.jpg");
 
+	Cheese_Wedge_Mesh* cheese_wedge_mesh = new Cheese_Wedge_Mesh();
+	Shader* wedge_vertex_shader = new Shader("Shaders/textured.3D.vertex_shader.glsl", Shader::Type::Vertex);
+	Shader* wedge_fragment_shader = new Shader("Shaders/textured.3D.fragment_shader.glsl", Shader::Type::Fragment);
+	Textured_3D_Shader_Program* rat_bait = new Textured_3D_Shader_Program(wedge_vertex_shader, wedge_fragment_shader);
+	Texture* wedge_texture = new Texture("Assets/texture.cheese.jpg");
+
 
 	//Cube_Mesh* cube = new Cube_Mesh();
 	//Shader* vertex_shader = new Shader("Shaders/textured.3D.vertex_shader.glsl", Shader::Type::Vertex);
@@ -247,33 +254,16 @@ int main(void)
 	// Transform a mesh using the GPU
 	// CPU - floats, integers
 	// GPU - matrix multiplication usin thousands of cores.
-	 	
+
 	float x = 0.0f;
 	float y = 0.0f;
 	float z = 0.0f;
 	float d = 0.0f;
 	while (true)
 	{
-		//{
-			glm::vec3 translation = glm::vec3(0.0f, 0.0f, 0.0f);
-			glm::vec3 rotation = glm::vec3(x, 0.0f, 0.0f);
-			glm::vec3 scale = glm::vec3(0.5f, 0.5f, 0.5f);
-
-			glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
-			glm::mat4 scale_m = glm::scale(glm::mat4(1.0f), scale);
-
-			glm::mat4 rotation_x = glm::rotate(rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-			glm::mat4 rotation_y = glm::rotate(rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-			glm::mat4 rotation_z = glm::rotate(rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-			glm::mat4 rotation_m = rotation_x * rotation_y * rotation_z;
-
-			glm::mat4 model = translation_m * rotation_m * scale_m;
-
-			pyramid_scheme->render(hexagonal_pyramid_mesh, hexagonal_pyramid_texture, &model);
-		/*}		
 		{
-			glm::vec3 translation = glm::vec3(-0.5f, 0.f, 0.0f);
-			glm::vec3 rotation = glm::vec3(a, a, 0.0f);
+			glm::vec3 translation = glm::vec3(0.5f, 0.0f, 0.0f);
+			glm::vec3 rotation = glm::vec3(x, 0.0f, 0.0f);
 			glm::vec3 scale = glm::vec3(0.25f, 0.25f, 0.25f);
 
 			glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
@@ -286,16 +276,33 @@ int main(void)
 
 			glm::mat4 model = translation_m * rotation_m * scale_m;
 
-			pyramid_scheme->render(hexagonal_pyramid_mesh, &hexagonal_pyramid_colors, &model);
-		}*/
+			pyramid_scheme->render(hexagonal_pyramid_mesh, hexagonal_pyramid_texture, &model);
+		}		
+		{
+			glm::vec3 translation = glm::vec3(-0.5f, 0.f, 0.0f);
+			glm::vec3 rotation = glm::vec3(x, x, 0.0f);
+			glm::vec3 scale = glm::vec3(0.25f, 0.25f, 0.25f);
+
+			glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
+			glm::mat4 scale_m = glm::scale(glm::mat4(1.0f), scale);
+
+			glm::mat4 rotation_x = glm::rotate(rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+			glm::mat4 rotation_y = glm::rotate(rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+			glm::mat4 rotation_z = glm::rotate(rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+			glm::mat4 rotation_m = rotation_x * rotation_y * rotation_z;
+
+			glm::mat4 model = translation_m * rotation_m * scale_m;
+
+			rat_bait->render(cheese_wedge_mesh, wedge_texture, &model);
+		}
 
 		// This renders the objects to the scene
 		glfwSwapBuffers(window);
-		glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
+		glClearColor(0.0f, 0.05f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glBindVertexArray(0);
 		glUseProgram(0);
-		x += 0.05f;
+		x += 0.03f;
 		y += 0.05f;
 		z += 0.2f;
 		d += 0.004f;

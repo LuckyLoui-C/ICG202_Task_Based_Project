@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Cheese_Wedge_Mesh.cpp" />
     <ClCompile Include="Colored_2D_Shader_Program.cpp" />
     <ClCompile Include="Colored_3D_Shader_Program.cpp" />
     <ClCompile Include="Cube_Mesh.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="Triangle_Mesh.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Cheese_Wedge_Mesh.h" />
     <ClInclude Include="Colored_2D_Shader_Program.h" />
     <ClInclude Include="Colored_3D_Shader_Program.h" />
     <ClInclude Include="Cube_Mesh.h" />
