@@ -23,6 +23,9 @@
 #include "Hexagonal_Pyramid_Mesh.h"
 #include "Cheese_Wedge_Mesh.h"
 
+#define SCREEN_WIDTH 1500.0f
+#define SCREEN_HEIGHT 1000.0f
+
 void gl_debug_message_callback(GLenum, GLenum type, GLuint, GLenum severity,
 	GLsizei, const GLchar * message, const void*)
 {
@@ -44,7 +47,7 @@ int main(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-	GLFWwindow* window = glfwCreateWindow(1200, 860, "ICG202 - Hexagon Render", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "ICG202 - Hexagon Render", NULL, NULL);
 	expect(window != nullptr, "Failed to create GLFW window!");
 	glfwMakeContextCurrent(window);
 
@@ -258,13 +261,27 @@ int main(void)
 	float x = 0.0f;
 	float y = 0.0f;
 	float z = 0.0f;
-	float d = 0.0f;
+	float w = 0.0f;
+	float sz = 0.0f;
 	while (true)
 	{
+		sz -= z * 10;
+		// Set up aspect ratio params:
+		float aspect_ratio = SCREEN_WIDTH / SCREEN_HEIGHT; // 1.5
+		float default_world_size = 10.0f;
+		float y_units = default_world_size;   // 2
+		float x_units = aspect_ratio * y_units;    // 3
+		float z_units = default_world_size;
+
+		/* Manual aspect ratio matrix :
+		glm::mat4 aspect_scaling = glm::scale(
+			glm::mat4(1.0),
+			glm::vec3(2.0f / x_units, 2.0f / y_units, 2.0f / z_units)  // 0.666*
+		);*/
 		{
-			glm::vec3 translation = glm::vec3(0.5f, 0.0f, 0.0f);
+			glm::vec3 translation = glm::vec3(3.0f, 0.0f, -6.0f);
 			glm::vec3 rotation = glm::vec3(x, 0.0f, 0.0f);
-			glm::vec3 scale = glm::vec3(0.25f, 0.25f, 0.25f);
+			glm::vec3 scale = glm::vec3(3.0f, 3.0f, 3.0f);
 
 			glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
 			glm::mat4 scale_m = glm::scale(glm::mat4(1.0f), scale);
@@ -276,12 +293,26 @@ int main(void)
 
 			glm::mat4 model = translation_m * rotation_m * scale_m;
 
-			pyramid_scheme->render(hexagonal_pyramid_mesh, hexagonal_pyramid_texture, &model);
+			glm::mat4 projection;
+			projection = glm::ortho(-x_units / 2, x_units / 2,
+									-y_units / 2, y_units / 2,
+									-1000.0f, 1000.0f);
+
+			/*projection = glm::perspectiveFov(
+				glm::radians(90.0f),
+				SCREEN_WIDTH,
+				SCREEN_HEIGHT,
+				0.1f,
+				-1000.0f);*/
+
+			glm::mat4 final_transformation = projection * model;
+
+			pyramid_scheme->render(hexagonal_pyramid_mesh, hexagonal_pyramid_texture, &final_transformation);
 		}		
 		{
-			glm::vec3 translation = glm::vec3(-0.5f, 0.f, 0.0f);
+			glm::vec3 translation = glm::vec3(-3.0f, 0.f, sz);
 			glm::vec3 rotation = glm::vec3(x, x, 0.0f);
-			glm::vec3 scale = glm::vec3(0.25f, 0.25f, 0.25f);
+			glm::vec3 scale = glm::vec3(3.0f, 3.0f, 3.0f);
 
 			glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
 			glm::mat4 scale_m = glm::scale(glm::mat4(1.0f), scale);
@@ -293,7 +324,21 @@ int main(void)
 
 			glm::mat4 model = translation_m * rotation_m * scale_m;
 
-			rat_bait->render(cheese_wedge_mesh, wedge_texture, &model);
+			glm::mat4 projection;
+			/*projection = glm::ortho(-x_units / 2, x_units / 2,
+				-y_units / 2, y_units / 2,
+				-1000.0f, 1000.0f);*/
+
+			projection = glm::perspectiveFov(
+				glm::radians(90.0f),
+				SCREEN_WIDTH,
+				SCREEN_HEIGHT,
+				0.1f,
+				-1000.0f);
+
+			glm::mat4 final_transformation = projection * model;
+
+			rat_bait->render(cheese_wedge_mesh, wedge_texture, &final_transformation);
 		}
 
 		// This renders the objects to the scene
@@ -302,9 +347,9 @@ int main(void)
 		glClear(GL_COLOR_BUFFER_BIT);
 		glBindVertexArray(0);
 		glUseProgram(0);
-		x += 0.03f;
+		x += 0.05f;
 		y += 0.05f;
-		z += 0.2f;
-		d += 0.004f;
+		z += 0.0002f;
+		w += 0.004f;
 	}
 }
