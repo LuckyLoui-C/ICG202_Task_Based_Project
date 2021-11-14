@@ -8,6 +8,8 @@
 #include <glm/gtx/transform.hpp>
 #include <math.h>
 #include <time.h>
+#include <thread>
+#include <chrono>
 
 #include "Triangle_Mesh.h"
 #include "Square_Mesh.h"
@@ -26,6 +28,20 @@
 #define SCREEN_WIDTH 1500.0f
 #define SCREEN_HEIGHT 1000.0f
 
+enum Key_State
+{
+	RELEASED,
+	PRESSED,
+	HELD
+};
+Key_State escape_key_state = Key_State::RELEASED;
+Key_State space_key_state = Key_State::RELEASED;
+Key_State w_key_state = Key_State::RELEASED;
+Key_State a_key_state = Key_State::RELEASED;
+Key_State s_key_state = Key_State::RELEASED;
+Key_State d_key_state = Key_State::RELEASED;
+
+// OpenGL error calls this function
 void gl_debug_message_callback(GLenum, GLenum type, GLuint, GLenum severity,
 	GLsizei, const GLchar * message, const void*)
 {
@@ -35,6 +51,61 @@ void gl_debug_message_callback(GLenum, GLenum type, GLuint, GLenum severity,
 			(type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
 			type, severity, message);
 		std::cout << glGetError() << std::endl;
+	}
+}
+
+// Called on input
+void on_input(GLFWwindow*, int key, int, int action, int)
+{
+	switch (action)
+	{
+	case GLFW_PRESS:
+		switch (key)
+		{
+		case GLFW_KEY_ESCAPE:
+			escape_key_state = Key_State::PRESSED;
+			break;
+		case GLFW_KEY_SPACE:
+			space_key_state = Key_State::PRESSED;
+			break;
+		case GLFW_KEY_W:
+			w_key_state = Key_State::PRESSED;
+			break;
+		case GLFW_KEY_A:
+			a_key_state = Key_State::PRESSED;
+			break;
+		case GLFW_KEY_S:
+			s_key_state = Key_State::PRESSED;
+			break;
+		case GLFW_KEY_D:
+			d_key_state = Key_State::PRESSED;
+			break;
+		}
+		break;
+
+	case GLFW_RELEASE:
+		switch (key)
+		{
+		case GLFW_KEY_ESCAPE:
+			escape_key_state = Key_State::RELEASED;
+			break;
+		case GLFW_KEY_SPACE:
+			space_key_state = Key_State::RELEASED;
+			break;
+		case GLFW_KEY_W:
+			w_key_state = Key_State::RELEASED;
+			break;
+		case GLFW_KEY_A:
+			a_key_state = Key_State::RELEASED;
+			break;
+		case GLFW_KEY_S:
+			s_key_state = Key_State::RELEASED;
+			break;
+		case GLFW_KEY_D:
+			d_key_state = Key_State::RELEASED;
+			break;
+		}
+		break;
 	}
 }
 
@@ -61,6 +132,8 @@ int main(void)
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
+
+	glfwSetKeyCallback(window, on_input);
 
 	// CPU CODE: C++ -- VS Compiles -- > -- Windows run via CPU
 	// CPU CODE: GLSL -- OpenGL Compiles -- > -- OpenGL run via GPU
@@ -258,98 +331,152 @@ int main(void)
 	// CPU - floats, integers
 	// GPU - matrix multiplication usin thousands of cores.
 
-	float x = 0.0f;
-	float y = 0.0f;
-	float z = 0.0f;
-	float w = 0.0f;
+	float a = 0.0f;
+	float b = 0.0f;
+	float c = 0.0f;
+	float d = 0.0f;
 	float sz = 0.0f;
-	while (true)
-	{
-		sz -= z * 10;
-		// Set up aspect ratio params:
-		float aspect_ratio = SCREEN_WIDTH / SCREEN_HEIGHT; // 1.5
-		float default_world_size = 10.0f;
-		float y_units = default_world_size;   // 2
-		float x_units = aspect_ratio * y_units;    // 3
-		float z_units = default_world_size;
 
+	glm::vec3 camera_translation = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	// Set up aspect ratio params:
+	float aspect_ratio = SCREEN_WIDTH / SCREEN_HEIGHT; // 1.5
+	float default_world_size = 10.0f;
+	float y_units = default_world_size;   // 2
+	float x_units = aspect_ratio * y_units;    // 3
+	float z_units = default_world_size;
+
+	glm::mat4 projection;
+
+	glm::mat4 ortho = glm::ortho(-x_units / 2, x_units / 2,
+		-y_units / 2, y_units / 2,
+		-1000.0f, 1000.0f);
+
+	glm::mat4 perspective = glm::perspectiveFov(
+		glm::radians(90.0f),
+		SCREEN_WIDTH,
+		SCREEN_HEIGHT,
+		0.1f,
+		-1000.0f);
+
+	projection = ortho;
+
+	bool should_stop_rendering = false;
+	while (should_stop_rendering == false)
+	{
+		// Key states for directional movement
+		if (escape_key_state == Key_State::PRESSED)
+			escape_key_state = Key_State::HELD;
+		if (space_key_state == Key_State::PRESSED)
+		if (w_key_state == Key_State::PRESSED)
+			w_key_state = Key_State::HELD;
+		if (a_key_state == Key_State::PRESSED)
+			a_key_state = Key_State::HELD;
+		if (s_key_state == Key_State::PRESSED)
+			s_key_state = Key_State::HELD;
+		if (d_key_state == Key_State::PRESSED)
+			d_key_state = Key_State::HELD;
+
+		bool move_object_upwards =
+			w_key_state == Key_State::PRESSED ||
+			w_key_state == Key_State::HELD;
+		bool move_object_downwards =
+			s_key_state == Key_State::PRESSED ||
+			s_key_state == Key_State::HELD;
+		bool move_object_right =
+			a_key_state == Key_State::PRESSED ||
+			a_key_state == Key_State::HELD;
+		bool move_object_left =
+			d_key_state == Key_State::PRESSED ||
+			d_key_state == Key_State::HELD;
+		bool camera_change =
+			space_key_state == Key_State::PRESSED;
+
+		//sz -= d * 10;
 		/* Manual aspect ratio matrix :
 		glm::mat4 aspect_scaling = glm::scale(
 			glm::mat4(1.0),
 			glm::vec3(2.0f / x_units, 2.0f / y_units, 2.0f / z_units)  // 0.666*
 		);*/
 		{
-			glm::vec3 translation = glm::vec3(3.0f, 0.0f, -6.0f);
-			glm::vec3 rotation = glm::vec3(x, 0.0f, 0.0f);
-			glm::vec3 scale = glm::vec3(3.0f, 3.0f, 3.0f);
+			if (move_object_upwards)
+			{
+				camera_translation.y -= 0.1f;
+			}
+			if (move_object_downwards)
+			{
+				camera_translation.y += 0.1f;
+			}
+			if (move_object_left)
+			{
+				camera_translation.x -= 0.1f;
+			}
+			if (move_object_right)
+			{
+				camera_translation.x += 0.1f;
+			}
+			if (camera_change)
+			{
+				if (projection == ortho)
+					projection = perspective;
+				else if (projection == perspective)
+					projection = ortho;
+			}
 
-			glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
-			glm::mat4 scale_m = glm::scale(glm::mat4(1.0f), scale);
+			glm::mat4 camera_translation_m = glm::translate(glm::mat4(1.0f), camera_translation);
+			glm::mat4 camera = camera_translation_m;
 
-			glm::mat4 rotation_x = glm::rotate(rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-			glm::mat4 rotation_y = glm::rotate(rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-			glm::mat4 rotation_z = glm::rotate(rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-			glm::mat4 rotation_m = rotation_x * rotation_y * rotation_z;
+			{
+				glm::vec3 translation = glm::vec3(-2.0f, 0.0f, -3.0f);
+				glm::vec3 rotation = glm::vec3(b, a, 0.0f);
+				glm::vec3 scale = glm::vec3(3.0f, 3.0f, 3.0f);
 
-			glm::mat4 model = translation_m * rotation_m * scale_m;
 
-			glm::mat4 projection;
-			projection = glm::ortho(-x_units / 2, x_units / 2,
-									-y_units / 2, y_units / 2,
-									-1000.0f, 1000.0f);
+				glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
+				glm::mat4 scale_m = glm::scale(glm::mat4(1.0f), scale);
 
-			/*projection = glm::perspectiveFov(
-				glm::radians(90.0f),
-				SCREEN_WIDTH,
-				SCREEN_HEIGHT,
-				0.1f,
-				-1000.0f);*/
+				glm::mat4 rotation_x = glm::rotate(rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+				glm::mat4 rotation_y = glm::rotate(rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+				glm::mat4 rotation_z = glm::rotate(rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+				glm::mat4 rotation_m = rotation_x * rotation_y * rotation_z;
 
-			glm::mat4 final_transformation = projection * model;
+				glm::mat4 model = translation_m * rotation_m * scale_m;
+				glm::mat4 final_transformation = projection * camera * model;
+				pyramid_scheme->render(hexagonal_pyramid_mesh, hexagonal_pyramid_texture, &final_transformation);
+			}
+			{
+				glm::vec3 translation = glm::vec3(2.0f, 0.0f, -3.0f);
+				glm::vec3 rotation = glm::vec3(a, 0.0f, 0.0f);
+				glm::vec3 scale = glm::vec3(3.0f, 3.0f, 3.0f);
 
-			pyramid_scheme->render(hexagonal_pyramid_mesh, hexagonal_pyramid_texture, &final_transformation);
+
+				glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
+				glm::mat4 scale_m = glm::scale(glm::mat4(1.0f), scale);
+
+				glm::mat4 rotation_x = glm::rotate(rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+				glm::mat4 rotation_y = glm::rotate(rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+				glm::mat4 rotation_z = glm::rotate(rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+				glm::mat4 rotation_m = rotation_x * rotation_y * rotation_z;
+
+				glm::mat4 model = translation_m * rotation_m * scale_m;
+				glm::mat4 final_transformation = projection * camera * model;
+				rat_bait->render(cheese_wedge_mesh, wedge_texture, &final_transformation);
+			}
 		}		
-		{
-			glm::vec3 translation = glm::vec3(-3.0f, 0.f, sz);
-			glm::vec3 rotation = glm::vec3(x, x, 0.0f);
-			glm::vec3 scale = glm::vec3(3.0f, 3.0f, 3.0f);
-
-			glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
-			glm::mat4 scale_m = glm::scale(glm::mat4(1.0f), scale);
-
-			glm::mat4 rotation_x = glm::rotate(rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-			glm::mat4 rotation_y = glm::rotate(rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-			glm::mat4 rotation_z = glm::rotate(rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-			glm::mat4 rotation_m = rotation_x * rotation_y * rotation_z;
-
-			glm::mat4 model = translation_m * rotation_m * scale_m;
-
-			glm::mat4 projection;
-			/*projection = glm::ortho(-x_units / 2, x_units / 2,
-				-y_units / 2, y_units / 2,
-				-1000.0f, 1000.0f);*/
-
-			projection = glm::perspectiveFov(
-				glm::radians(90.0f),
-				SCREEN_WIDTH,
-				SCREEN_HEIGHT,
-				0.1f,
-				-1000.0f);
-
-			glm::mat4 final_transformation = projection * model;
-
-			rat_bait->render(cheese_wedge_mesh, wedge_texture, &final_transformation);
-		}
-
 		// This renders the objects to the scene
 		glfwSwapBuffers(window);
 		glClearColor(0.0f, 0.05f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glBindVertexArray(0);
 		glUseProgram(0);
-		x += 0.05f;
-		y += 0.05f;
-		z += 0.0002f;
-		w += 0.004f;
+		a += 0.05f;
+		b += 0.05f;
+		c += 0.0002f;
+		d += 0.004f;
+
+		glfwPollEvents();
+
+		if (escape_key_state == Key_State::PRESSED)
+			should_stop_rendering = true;
 	}
 }
