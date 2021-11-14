@@ -138,8 +138,6 @@ int main(void)
 	// CPU CODE: C++ -- VS Compiles -- > -- Windows run via CPU
 	// CPU CODE: GLSL -- OpenGL Compiles -- > -- OpenGL run via GPU
 
-							
-	
 	//Square_Mesh* square = new Square_Mesh(); // Square to be filled with colour or texture
 	//Shader* vertex_shader = new Shader("Shaders/textured.2D.vertex_shader.glsl", Shader::Type::Vertex);
 	//Shader* fragment_shader = new Shader("Shaders/textured.2D.fragment_shader.glsl", Shader::Type::Fragment);
@@ -148,152 +146,151 @@ int main(void)
 	//Texture* mask = new Texture("Assets/mask.airplane_background.png");
 
 	// Colours for each vertex
-	std::vector<GLfloat> colors =
-	{
-		// Front Face - Red
-		// triangle 1
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		// triangle 2
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
+	//std::vector<GLfloat> colors =
+	//{
+	//	// Front Face - Red
+	//	// triangle 1
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	// triangle 2
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
 
-		// Back Face - Blue-Green	 
-		// triangle 1
-		0.0f, 0.5f, 0.5f, 1.0f,
-		0.0f, 0.5f, 0.5f, 1.0f,
-		0.0f, 0.5f, 0.5f, 1.0f,
-		// triangle 2
-		0.0f, 0.5f, 0.5f, 1.0f,
-		0.0f, 0.5f, 0.5f, 1.0f,
-		0.0f, 0.5f, 0.5f, 1.0f,
+	//	// Back Face - Blue-Green	 
+	//	// triangle 1
+	//	0.0f, 0.5f, 0.5f, 1.0f,
+	//	0.0f, 0.5f, 0.5f, 1.0f,
+	//	0.0f, 0.5f, 0.5f, 1.0f,
+	//	// triangle 2
+	//	0.0f, 0.5f, 0.5f, 1.0f,
+	//	0.0f, 0.5f, 0.5f, 1.0f,
+	//	0.0f, 0.5f, 0.5f, 1.0f,
 
-		// Bottom Face - Purple
-		// triangle 1
-		0.120f, 0.13f, 0.200f, 1.0f,
-		0.120f, 0.13f, 0.200f, 1.0f,
-		0.120f, 0.13f, 0.200f, 1.0f,
-		// triangle 2
-		0.120f, 0.13f, 0.200f, 1.0f,
-		0.120f, 0.13f, 0.200f, 1.0f,
-		0.120f, 0.13f, 0.200f, 1.0f,
+	//	// Bottom Face - Purple
+	//	// triangle 1
+	//	0.120f, 0.13f, 0.200f, 1.0f,
+	//	0.120f, 0.13f, 0.200f, 1.0f,
+	//	0.120f, 0.13f, 0.200f, 1.0f,
+	//	// triangle 2
+	//	0.120f, 0.13f, 0.200f, 1.0f,
+	//	0.120f, 0.13f, 0.200f, 1.0f,
+	//	0.120f, 0.13f, 0.200f, 1.0f,
 
-		// Top Face - Yellow
-		// triangle 1
-		1.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 0.0f, 1.0f,
-		// triangle 2
-		1.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 0.0f, 1.0f,
+	//	// Top Face - Yellow
+	//	// triangle 1
+	//	1.0f, 1.0f, 0.0f, 1.0f,
+	//	1.0f, 1.0f, 0.0f, 1.0f,
+	//	1.0f, 1.0f, 0.0f, 1.0f,
+	//	// triangle 2
+	//	1.0f, 1.0f, 0.0f, 1.0f,
+	//	1.0f, 1.0f, 0.0f, 1.0f,
+	//	1.0f, 1.0f, 0.0f, 1.0f,
 
-		// Left Face - Blue
-		// triangle 1
-		0.0f, 0.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 1.0f,
-		// triange 2
-		0.0f, 0.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 1.0f,
+	//	// Left Face - Blue
+	//	// triangle 1
+	//	0.0f, 0.0f, 1.0f, 1.0f,
+	//	0.0f, 0.0f, 1.0f, 1.0f,
+	//	0.0f, 0.0f, 1.0f, 1.0f,
+	//	// triange 2
+	//	0.0f, 0.0f, 1.0f, 1.0f,
+	//	0.0f, 0.0f, 1.0f, 1.0f,
+	//	0.0f, 0.0f, 1.0f, 1.0f,
 
-		// Right Face - Brown
-		// triangle 1
-		0.5f, 0.2f, 0.0f, 1.0f,
-		0.5f, 0.2f, 0.0f, 1.0f,
-		0.5f, 0.2f, 0.0f, 1.0f,
-		// triange 2  
-		0.5f, 0.2f, 0.0f, 1.0f,
-		0.5f, 0.2f, 0.0f, 1.0f,
-		0.5f, 0.2f, 0.0f, 1.0f,
+	//	// Right Face - Brown
+	//	// triangle 1
+	//	0.5f, 0.2f, 0.0f, 1.0f,
+	//	0.5f, 0.2f, 0.0f, 1.0f,
+	//	0.5f, 0.2f, 0.0f, 1.0f,
+	//	// triange 2  
+	//	0.5f, 0.2f, 0.0f, 1.0f,
+	//	0.5f, 0.2f, 0.0f, 1.0f,
+	//	0.5f, 0.2f, 0.0f, 1.0f,
 
+	//};
+	//std::vector<GLfloat> hexagon_colors =
+	//{
+	//	// HEXAGON BASE COLORS
+	//	// triangle 1
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	// triangle 2
+	//	1.0f, 0.9f, 0.200f, 1.0f,
+	//	1.0f, 0.9f, 0.200f, 1.0f,
+	//	1.0f, 0.9f, 0.200f, 1.0f,
+	//	// triangle 3
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	// triangle 4
+	//	1.0f, 0.9f, 0.200f, 1.0f,
+	//	1.0f, 0.9f, 0.200f, 1.0f,
+	//	1.0f, 0.9f, 0.200f, 1.0f,
+	//	// triangle 5
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	// triangle 6
+	//	1.0f, 0.9f, 0.200f, 1.0f,
+	//	1.0f, 0.9f, 0.200f, 1.0f,
+	//	1.0f, 0.9f, 0.200f, 1.0f,
+	//};
+	//std::vector<GLfloat> hexagonal_pyramid_colors =
+	//{
+	//	// HEXAGON BASE COLORS
+	//	// triangle 1
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	// triangle 2
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	// triangle 3
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	// triangle 4
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	// triangle 5
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	// triangle 6
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
+	//	1.0f, 0.0f, 0.0f, 1.0f,
 
-	};
-	std::vector<GLfloat> hexagon_colors =
-	{
-		// HEXAGON BASE COLORS
-		// triangle 1
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		// triangle 2
-		1.0f, 0.9f, 0.200f, 1.0f,
-		1.0f, 0.9f, 0.200f, 1.0f,
-		1.0f, 0.9f, 0.200f, 1.0f,
-		// triangle 3
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		// triangle 4
-		1.0f, 0.9f, 0.200f, 1.0f,
-		1.0f, 0.9f, 0.200f, 1.0f,
-		1.0f, 0.9f, 0.200f, 1.0f,
-		// triangle 5
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		// triangle 6
-		1.0f, 0.9f, 0.200f, 1.0f,
-		1.0f, 0.9f, 0.200f, 1.0f,
-		1.0f, 0.9f, 0.200f, 1.0f,
-	};
-	std::vector<GLfloat> hexagonal_pyramid_colors =
-	{
-		// HEXAGON BASE COLORS
-		// triangle 1
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		// triangle 2
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		// triangle 3
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		// triangle 4
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		// triangle 5
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		// triangle 6
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f,
-
-		// TRIANGULAR SIDE FACE COLORS
-		// Triangle Face 1
-		0.0f, 0.0f, 0.5f, 1.0f,
-		1.0f, 1.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 0.1f, 1.0f,
-		// Triangle Face 2
-		0.0f, 0.0f, 0.5f, 1.0f,
-		1.0f, 1.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 0.1f, 1.0f,
-		// Triangle Face 3
-		0.0f, 0.0f, 0.5f, 1.0f,
-		1.0f, 1.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 0.1f, 1.0f,
-		// Triangle Face 4
-		0.0f, 0.0f, 0.5f, 1.0f,
-		1.0f, 1.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 0.1f, 1.0f,
-		// Triangle Face 5
-		0.0f, 0.0f, 0.5f, 1.0f,
-		1.0f, 1.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 0.1f, 1.0f,
-		// Triangle Face 6
-		0.0f, 0.0f, 0.5f, 1.0f,
-		1.0f, 1.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 0.1f, 1.0f,
-	};
+	//	// TRIANGULAR SIDE FACE COLORS
+	//	// Triangle Face 1
+	//	0.0f, 0.0f, 0.5f, 1.0f,
+	//	1.0f, 1.0f, 1.0f, 1.0f,
+	//	0.0f, 0.0f, 0.1f, 1.0f,
+	//	// Triangle Face 2
+	//	0.0f, 0.0f, 0.5f, 1.0f,
+	//	1.0f, 1.0f, 1.0f, 1.0f,
+	//	0.0f, 0.0f, 0.1f, 1.0f,
+	//	// Triangle Face 3
+	//	0.0f, 0.0f, 0.5f, 1.0f,
+	//	1.0f, 1.0f, 1.0f, 1.0f,
+	//	0.0f, 0.0f, 0.1f, 1.0f,
+	//	// Triangle Face 4
+	//	0.0f, 0.0f, 0.5f, 1.0f,
+	//	1.0f, 1.0f, 1.0f, 1.0f,
+	//	0.0f, 0.0f, 0.1f, 1.0f,
+	//	// Triangle Face 5
+	//	0.0f, 0.0f, 0.5f, 1.0f,
+	//	1.0f, 1.0f, 1.0f, 1.0f,
+	//	0.0f, 0.0f, 0.1f, 1.0f,
+	//	// Triangle Face 6
+	//	0.0f, 0.0f, 0.5f, 1.0f,
+	//	1.0f, 1.0f, 1.0f, 1.0f,
+	//	0.0f, 0.0f, 0.1f, 1.0f,
+	//};
 	
 	/*
 	Cube_Mesh* cube = new Cube_Mesh();
@@ -318,13 +315,11 @@ int main(void)
 	Textured_3D_Shader_Program* rat_bait = new Textured_3D_Shader_Program(wedge_vertex_shader, wedge_fragment_shader);
 	Texture* wedge_texture = new Texture("Assets/texture.cheese.jpg");
 
-
 	//Cube_Mesh* cube = new Cube_Mesh();
 	//Shader* vertex_shader = new Shader("Shaders/textured.3D.vertex_shader.glsl", Shader::Type::Vertex);
 	//Shader* fragment_shader = new Shader("Shaders/textured.3D.fragment_shader.glsl", Shader::Type::Fragment);
 	//Textured_3D_Shader_Program* program = new Textured_3D_Shader_Program(vertex_shader, fragment_shader);
 	//Texture* cube_texture = new Texture("Assets/ice.sheet.jpg");
-
 
 	// Re-use a mesh over and over
 	// Transform a mesh using the GPU
@@ -362,12 +357,13 @@ int main(void)
 	projection = ortho;
 
 	bool should_stop_rendering = false;
+	bool camera_change = false;
 	while (should_stop_rendering == false)
 	{
-		// Key states for directional movement
 		if (escape_key_state == Key_State::PRESSED)
 			escape_key_state = Key_State::HELD;
 		if (space_key_state == Key_State::PRESSED)
+			space_key_state = Key_State::HELD;
 		if (w_key_state == Key_State::PRESSED)
 			w_key_state = Key_State::HELD;
 		if (a_key_state == Key_State::PRESSED)
@@ -389,8 +385,6 @@ int main(void)
 		bool move_object_left =
 			d_key_state == Key_State::PRESSED ||
 			d_key_state == Key_State::HELD;
-		bool camera_change =
-			space_key_state == Key_State::PRESSED;
 
 		//sz -= d * 10;
 		/* Manual aspect ratio matrix :
@@ -401,26 +395,32 @@ int main(void)
 		{
 			if (move_object_upwards)
 			{
-				camera_translation.y -= 0.1f;
+				camera_translation.y -= 0.4f;
 			}
 			if (move_object_downwards)
 			{
-				camera_translation.y += 0.1f;
+				camera_translation.y += 0.4f;
 			}
 			if (move_object_left)
 			{
-				camera_translation.x -= 0.1f;
+				camera_translation.x -= 0.4f;
 			}
 			if (move_object_right)
 			{
-				camera_translation.x += 0.1f;
+				camera_translation.x += 0.4f;
 			}
 			if (camera_change)
 			{
 				if (projection == ortho)
+				{
 					projection = perspective;
+					camera_change = false;
+				}
 				else if (projection == perspective)
+				{
 					projection = ortho;
+					camera_change = false;
+				}
 			}
 
 			glm::mat4 camera_translation_m = glm::translate(glm::mat4(1.0f), camera_translation);
@@ -478,5 +478,8 @@ int main(void)
 
 		if (escape_key_state == Key_State::PRESSED)
 			should_stop_rendering = true;
+		if (space_key_state == Key_State::PRESSED)
+			camera_change = true;
+		std::this_thread::sleep_for(std::chrono::milliseconds(30));
 	}
 }
