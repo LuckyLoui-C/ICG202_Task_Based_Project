@@ -4,6 +4,7 @@ in vec3 vertex_position;
 in vec2 vertex_texture_coordinate;
 
 out vec2 interpolated_texture_coordinate;
+out vec3 pixel_coordinate;
 
 uniform mat4 transformation;
 
@@ -13,4 +14,5 @@ void main()
 
     gl_Position                     = vertex_position_transformed;
     interpolated_texture_coordinate = vertex_texture_coordinate;
+    pixel_coordinate = vertex_position_transformed.xyz;
 }

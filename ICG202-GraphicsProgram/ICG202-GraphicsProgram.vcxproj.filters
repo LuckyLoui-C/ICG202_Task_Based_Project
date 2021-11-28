@@ -54,10 +54,10 @@
     <ClCompile Include="Hexagonal_Pyramid_Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Textured_3D_Shader_Program.cpp">
+    <ClCompile Include="Cheese_Wedge_Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Cheese_Wedge_Mesh.cpp">
+    <ClCompile Include="Textured_3D_Shader_Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -65,6 +65,8 @@ Hexagonal_Pyramid_Mesh::Hexagonal_Pyramid_Mesh()
 		_texture_coordinates.insert(_texture_coordinates.end(), t6);
 		_verticies.insert(_verticies.end(), v[2]); // 18
 		_texture_coordinates.insert(_texture_coordinates.end(), t4);
+
+		_normals.insert(_normals.end(), { -0.5f, 0.5f, 0.5f });
 	}
 
 	// TRIANGLE SIDE FACES
