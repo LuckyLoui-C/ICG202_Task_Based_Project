@@ -67,7 +67,7 @@ void Textured_3D_Shader_Program::render(const Mesh* mesh, const Texture* texture
 
 	GLint lighting_position_location = glGetUniformLocation(program(), "lighting_position");
 	expect(lighting_position_location != -1, "Failed to find lighting_position uniform location.");
-	glUniform3f(lighting_position_location, sinf(a) * 0.25, cosf(a) * 0.25, 0.0f);
+	glUniform3f(lighting_position_location, 0.0f, 0.0f, 0.0f);
 
 	//GLint lighting_brightness_location = glGetUniformLocation(program(), "lighting_brightness");
 	//expect(lighting_brightness_location != -1, "Failed to find lighting_brightness uniform location.");

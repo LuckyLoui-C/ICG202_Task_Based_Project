@@ -24,6 +24,7 @@
 #include "Cube_Mesh.h"
 #include "Hexagonal_Pyramid_Mesh.h"
 #include "Cheese_Wedge_Mesh.h"
+#include "obj_file_mesh.h"
 
 #define SCREEN_WIDTH 1500.0f
 #define SCREEN_HEIGHT 1000.0f
@@ -155,17 +156,23 @@ int main(void)
 	glfwSetKeyCallback(window, on_input);
 	glfwSetCursorPosCallback(window, cursor_postion_callback);
 
-	Hexagonal_Pyramid_Mesh* hexagonal_pyramid_mesh = new Hexagonal_Pyramid_Mesh();
-	Shader* pyramid_vertex_shader = new Shader("Shaders/textured.3D.vertex_shader.glsl", Shader::Type::Vertex);
-	Shader* pyramid_fragment_shader = new Shader("Shaders/textured.3D.fragment_shader.glsl", Shader::Type::Fragment);
-	Textured_3D_Shader_Program* pyramid_scheme = new Textured_3D_Shader_Program(pyramid_vertex_shader, pyramid_fragment_shader);
-	Texture* hexagonal_pyramid_texture = new Texture("Assets/moon.base.jpg");
+	Obj_File_Mesh* mesh = new Obj_File_Mesh("Assets/robot.obj");
+	Shader* vertex_shader = new Shader("Shaders/textured.3D.vertex_shader.glsl", Shader::Type::Vertex);
+	Shader* fragment_shader = new Shader("Shaders/textured.3D.fragment_shader.glsl", Shader::Type::Fragment);
+	Textured_3D_Shader_Program* program = new Textured_3D_Shader_Program(vertex_shader, fragment_shader);
+	Texture* texture = new Texture("Assets/robot_diffuse.jpg");
 
-	Cheese_Wedge_Mesh* cheese_wedge_mesh = new Cheese_Wedge_Mesh();
-	Shader* wedge_vertex_shader = new Shader("Shaders/textured.3D.vertex_shader.glsl", Shader::Type::Vertex);
-	Shader* wedge_fragment_shader = new Shader("Shaders/textured.3D.fragment_shader.glsl", Shader::Type::Fragment);
-	Textured_3D_Shader_Program* rat_bait = new Textured_3D_Shader_Program(wedge_vertex_shader, wedge_fragment_shader);
-	Texture* wedge_texture = new Texture("Assets/texture.cheese.jpg");
+	//Hexagonal_Pyramid_Mesh* hexagonal_pyramid_mesh = new Hexagonal_Pyramid_Mesh();
+	//Shader* pyramid_vertex_shader = new Shader("Shaders/textured.3D.vertex_shader.glsl", Shader::Type::Vertex);
+	//Shader* pyramid_fragment_shader = new Shader("Shaders/textured.3D.fragment_shader.glsl", Shader::Type::Fragment);
+	//Textured_3D_Shader_Program* pyramid_scheme = new Textured_3D_Shader_Program(pyramid_vertex_shader, pyramid_fragment_shader);
+	//Texture* hexagonal_pyramid_texture = new Texture("Assets/moon.base.jpg");
+
+	//Cheese_Wedge_Mesh* cheese_wedge_mesh = new Cheese_Wedge_Mesh();
+	//Shader* wedge_vertex_shader = new Shader("Shaders/textured.3D.vertex_shader.glsl", Shader::Type::Vertex);
+	//Shader* wedge_fragment_shader = new Shader("Shaders/textured.3D.fragment_shader.glsl", Shader::Type::Fragment);
+	//Textured_3D_Shader_Program* rat_bait = new Textured_3D_Shader_Program(wedge_vertex_shader, wedge_fragment_shader);
+	//Texture* wedge_texture = new Texture("Assets/texture.cheese.jpg");
 
 	float a = 0.0f;
 	float b = 0.0f;
@@ -173,8 +180,9 @@ int main(void)
 	float d = 0.0f;
 	float sz = 0.0f;
 
+	// Set up camera location and directions
 	glm::vec3 camera_position = glm::vec3(0.0f, 0.0f, 1.0f);
-	glm::vec3 camera_target = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 camera_target = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3 camera_up = glm::vec3(0.0f, 1.0f, 0.0f);
 
 	float yaw = -90.0f; // x
@@ -202,7 +210,7 @@ int main(void)
 		0.1f,
 		-1000.0f);
 
-	projection = ortho;
+	projection = perspective;
 
 	bool should_stop_rendering = false;
 	bool camera_change = false;
@@ -239,17 +247,17 @@ int main(void)
 
 		glm::vec3 camera_forward = glm::normalize(camera_target - camera_position);
 		bool hasnt_moved_cursor_yet = (previous_mouse_x_position == 0.0f && previous_mouse_y_position == 0.0f);
-		if (inputs_captured > 4)
+		if (inputs_captured > 2)
 		{
 			glm::vec3 direction;
 			direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
 			direction.y = sin(glm::radians(pitch));
 			direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-			camera_forward += glm::normalize(direction);
+			camera_forward = glm::normalize(direction);
 		}
 
-		glm::vec3 camera_up = glm::vec3(0.0f, 1.0f, 0.0f);
-		glm::vec3 camera_left = glm::normalize(glm::cross(camera_up, camera_forward));
+		glm::vec3 camera_right = glm::normalize(glm::cross(camera_forward, glm::vec3(0.f, 1.f, 0.f)));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+		glm::vec3 camera_up = glm::normalize(glm::cross(camera_right, camera_forward));
 
 		if (camera_change)
 		{
@@ -270,61 +278,58 @@ int main(void)
 			w_key_state == Key_State::HELD;
 		if (move_camera_forwards)
 		{
-			camera_position += camera_forward * 0.1f;
-			camera_target += camera_forward * 0.1f;
+			camera_position += camera_forward * 0.03f;
+			camera_target += camera_forward * 0.03f;
 		}
 		bool move_camera_backwards =
 			s_key_state == Key_State::PRESSED ||
 			s_key_state == Key_State::HELD;
 		if (move_camera_backwards)
 		{
-			camera_position -= camera_forward * 0.1f;
-			camera_target -= camera_forward * 0.1f;
+			camera_position -= camera_forward * 0.03f;
+			camera_target -= camera_forward * 0.03f;
 		}
 		bool move_camera_right =
 			d_key_state == Key_State::PRESSED ||
 			d_key_state == Key_State::HELD;
 		if (move_camera_right)
 		{
-			camera_position -= camera_left * 0.1f;
-			camera_target -= camera_left * 0.1f;
+			camera_position += camera_right * 0.03f;
+			camera_target += camera_right * 0.03f;
 		}
 		bool move_camera_left =
 			a_key_state == Key_State::PRESSED ||
 			a_key_state == Key_State::HELD;
 		if (move_camera_left)
 		{
-			camera_position += camera_left * 0.1f;
-			camera_target += camera_left * 0.1f;
+			camera_position -= camera_right * 0.03f;
+			camera_target -= camera_right * 0.03f;
 		}
-
-		std::cout << camera_position.z << std::endl;
 
 		glm::mat4 camera;
 		camera = glm::lookAt(camera_position, camera_position + camera_forward, camera_up);
 
 		{
-			glm::vec3 translation = glm::vec3(0.0f, 0.0f, -1.0f);
+			glm::vec3 translation = glm::vec3(0.0f, -0.5f, 0.0f);
 			glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-			glm::vec3 scale = glm::vec3(3.0f, 3.0f, 3.0f);
-
+			glm::vec3 scale = glm::vec3(0.2f, 0.2f, 0.2f);
 
 			glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
 			glm::mat4 scale_m = glm::scale(glm::mat4(1.0f), scale);
 
-			glm::mat4 rotation_x = glm::rotate(rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-			glm::mat4 rotation_y = glm::rotate(rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-			glm::mat4 rotation_z = glm::rotate(rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+			glm::mat4 rotation_x = glm::rotate(rotation.x, glm::vec3(1.f, 0.f, 0.f));
+			glm::mat4 rotation_y = glm::rotate(rotation.y, glm::vec3(0.f, 1.f, 0.f));
+			glm::mat4 rotation_z = glm::rotate(rotation.z, glm::vec3(0.f, 0.f, 1.f));
 			glm::mat4 rotation_m = rotation_x * rotation_y * rotation_z;
 
 			glm::mat4 model = translation_m * rotation_m * scale_m;
-			glm::mat4 final_transformation = projection * camera * model;
-			pyramid_scheme->render(hexagonal_pyramid_mesh, hexagonal_pyramid_texture, &final_transformation);
+			glm::mat4 final_transform = projection * camera * model;
+			program->render(mesh, texture, &final_transform);
 		}
 
 		// This renders the objects to the scene
 		glfwSwapBuffers(window);
-		glClearColor(0.0f, 0.05f, 0.1f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glBindVertexArray(0);
 		glUseProgram(0);
@@ -339,6 +344,6 @@ int main(void)
 			should_stop_rendering = true;
 		if (space_key_state == Key_State::PRESSED)
 			camera_change = true;
-		std::this_thread::sleep_for(std::chrono::milliseconds(30));
+		std::this_thread::sleep_for(std::chrono::milliseconds(15));
 	}
 }
