@@ -20,6 +20,8 @@
 #include "textured_2D_shader_program.h"
 #include "Colored_3D_Shader_Program.h"
 #include "Textured_3D_Shader_Program.h"
+#include "Textured_Lit_3D_Shader_Program.h"
+#include "Textured_Lit_Horror_3D_Shader_Program.h"
 #include "texture.h"
 #include "Cube_Mesh.h"
 #include "Hexagonal_Pyramid_Mesh.h"
@@ -41,6 +43,7 @@ Key_State w_key_state = Key_State::RELEASED;
 Key_State a_key_state = Key_State::RELEASED;
 Key_State s_key_state = Key_State::RELEASED;
 Key_State d_key_state = Key_State::RELEASED;
+Key_State h_key_state = Key_State::RELEASED;
 
 // OpenGL error calls this function
 void gl_debug_message_callback(GLenum, GLenum type, GLuint, GLenum severity,
@@ -81,6 +84,9 @@ void on_input(GLFWwindow*, int key, int, int action, int)
 			case GLFW_KEY_D:
 				d_key_state = Key_State::PRESSED;
 				break;
+			case GLFW_KEY_H:
+				h_key_state = Key_State::PRESSED;
+				break;
 			}
 			break;
 
@@ -104,6 +110,9 @@ void on_input(GLFWwindow*, int key, int, int action, int)
 				break;
 			case GLFW_KEY_D:
 				d_key_state = Key_State::RELEASED;
+				break;
+			case GLFW_KEY_H:
+				h_key_state = Key_State::RELEASED;
 				break;
 			}
 			break;
@@ -156,23 +165,27 @@ int main(void)
 	glfwSetKeyCallback(window, on_input);
 	glfwSetCursorPosCallback(window, cursor_postion_callback);
 
-	Obj_File_Mesh* mesh = new Obj_File_Mesh("Assets/robot.obj");
-	Shader* vertex_shader = new Shader("Shaders/textured.3D.vertex_shader.glsl", Shader::Type::Vertex);
-	Shader* fragment_shader = new Shader("Shaders/textured.3D.fragment_shader.glsl", Shader::Type::Fragment);
-	Textured_3D_Shader_Program* program = new Textured_3D_Shader_Program(vertex_shader, fragment_shader);
-	Texture* texture = new Texture("Assets/robot_diffuse.jpg");
 
-	//Hexagonal_Pyramid_Mesh* hexagonal_pyramid_mesh = new Hexagonal_Pyramid_Mesh();
-	//Shader* pyramid_vertex_shader = new Shader("Shaders/textured.3D.vertex_shader.glsl", Shader::Type::Vertex);
-	//Shader* pyramid_fragment_shader = new Shader("Shaders/textured.3D.fragment_shader.glsl", Shader::Type::Fragment);
-	//Textured_3D_Shader_Program* pyramid_scheme = new Textured_3D_Shader_Program(pyramid_vertex_shader, pyramid_fragment_shader);
-	//Texture* hexagonal_pyramid_texture = new Texture("Assets/moon.base.jpg");
+
+	Shader* vertex_shader = new Shader("Shaders/textured.lit.3D.vertex_shader.glsl", Shader::Type::Vertex);
+	Shader* fragment_shader = new Shader("Shaders/textured.lit.3D.fragment_shader.glsl", Shader::Type::Fragment);
+	Textured_Lit_3D_Shader_Program* program = new Textured_Lit_3D_Shader_Program(vertex_shader, fragment_shader);
+
+	Shader* horror_vertex_shader = new Shader("Shaders/textured.lit.3D.vertex_shader.glsl", Shader::Type::Vertex);
+	Shader* horror_fragment_shader = new Shader("Shaders/textured.lit.3D.fragment_shader.glsl", Shader::Type::Fragment);
+	Textured_Lit_Horror_3D_Shader_Program* horror_program = new Textured_Lit_Horror_3D_Shader_Program(horror_vertex_shader, horror_fragment_shader);
+
+	Cube_Mesh* mesh = new Cube_Mesh();
+	Texture* texture = new Texture("Assets/texture.crate.jpg");
+
+	Obj_File_Mesh* robot_mesh = new Obj_File_Mesh("Assets/robot.obj");
+	Texture* robot_texture = new Texture("Assets/robot_diffuse.jpg");
+
+	Hexagonal_Pyramid_Mesh* hexagonal_pyramid_mesh = new Hexagonal_Pyramid_Mesh();
+	Texture* hexagonal_pyramid_texture = new Texture("Assets/moon.base.jpg");
 
 	//Cheese_Wedge_Mesh* cheese_wedge_mesh = new Cheese_Wedge_Mesh();
-	//Shader* wedge_vertex_shader = new Shader("Shaders/textured.3D.vertex_shader.glsl", Shader::Type::Vertex);
-	//Shader* wedge_fragment_shader = new Shader("Shaders/textured.3D.fragment_shader.glsl", Shader::Type::Fragment);
-	//Textured_3D_Shader_Program* rat_bait = new Textured_3D_Shader_Program(wedge_vertex_shader, wedge_fragment_shader);
-	//Texture* wedge_texture = new Texture("Assets/texture.cheese.jpg");
+	//Texture* cheese_wedge_texture = new Texture("Assets/texture.cheese.jpg");
 
 	float a = 0.0f;
 	float b = 0.0f;
@@ -214,6 +227,7 @@ int main(void)
 
 	bool should_stop_rendering = false;
 	bool camera_change = false;
+	bool light_change = false;
 	while (should_stop_rendering == false)
 	{
 		if (escape_key_state == Key_State::PRESSED)
@@ -228,6 +242,8 @@ int main(void)
 			s_key_state = Key_State::HELD;
 		if (d_key_state == Key_State::PRESSED)
 			d_key_state = Key_State::HELD;
+		if (h_key_state == Key_State::PRESSED)
+			h_key_state = Key_State::HELD;
 
 		glm::vec2 mouse_translation = glm::vec2(mouse_x_position - previous_mouse_x_position, mouse_y_position - previous_mouse_y_position);
 		previous_mouse_x_position = mouse_x_position;
@@ -310,7 +326,29 @@ int main(void)
 		camera = glm::lookAt(camera_position, camera_position + camera_forward, camera_up);
 
 		{
-			glm::vec3 translation = glm::vec3(0.0f, -0.5f, 0.0f);
+			// Cube
+			glm::vec3 translation = glm::vec3(-1.0f, 0.5f, 0.0f);
+			glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+			glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
+
+			glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
+			glm::mat4 scale_m = glm::scale(glm::mat4(1.0f), scale);
+
+			glm::mat4 rotation_x = glm::rotate(rotation.x, glm::vec3(1.f, 0.f, 0.f));
+			glm::mat4 rotation_y = glm::rotate(rotation.y, glm::vec3(0.f, 1.f, 0.f));
+			glm::mat4 rotation_z = glm::rotate(rotation.z, glm::vec3(0.f, 0.f, 1.f));
+			glm::mat4 rotation_m = rotation_x * rotation_y * rotation_z;
+
+			glm::mat4 model = translation_m * rotation_m * scale_m;
+			glm::mat4 final_transform = projection * camera * model;
+			//if (!light_change)
+				program->render(mesh, texture, &final_transform);
+			//else
+			//	horror_program->render(mesh, texture, &final_transform);
+		}
+		{
+			// Robot
+			glm::vec3 translation = glm::vec3(1.0f, 0.0f, 0.0f);
 			glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 			glm::vec3 scale = glm::vec3(0.2f, 0.2f, 0.2f);
 
@@ -324,8 +362,46 @@ int main(void)
 
 			glm::mat4 model = translation_m * rotation_m * scale_m;
 			glm::mat4 final_transform = projection * camera * model;
-			program->render(mesh, texture, &final_transform);
+			if (!light_change)
+				program->render(robot_mesh, robot_texture, &final_transform);
+			else
+				horror_program->render(robot_mesh, robot_texture, &final_transform);
 		}
+		{
+			// Hexagonal Pyramid
+			glm::vec3 translation = glm::vec3(-1.0f, 1.5f, 0.0f);
+			glm::vec3 rotation = glm::vec3(0.0f, a, 0.0f);
+			glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
+
+			glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
+			glm::mat4 scale_m = glm::scale(glm::mat4(1.0f), scale);
+
+			glm::mat4 rotation_x = glm::rotate(rotation.x, glm::vec3(1.f, 0.f, 0.f));
+			glm::mat4 rotation_y = glm::rotate(rotation.y, glm::vec3(0.f, 1.f, 0.f));
+			glm::mat4 rotation_z = glm::rotate(rotation.z, glm::vec3(0.f, 0.f, 1.f));
+			glm::mat4 rotation_m = rotation_x * rotation_y * rotation_z;
+
+			glm::mat4 model = translation_m * rotation_m * scale_m;
+			glm::mat4 final_transform = projection * camera * model;
+			//if (!light_change)
+				program->render(hexagonal_pyramid_mesh, hexagonal_pyramid_texture, &final_transform);
+			//else
+			//	horror_program->render(hexagonal_pyramid_mesh, hexagonal_pyramid_texture, &final_transform);
+		}
+		//{
+		//	glm::vec3 translation = glm::vec3(-1.0f, 1.5f, 0.0f);
+		//	glm::vec3 rotation = glm::vec3(0.0f, a, 0.0f);
+		//	glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
+		//	glm::mat4 translation_m = glm::translate(glm::mat4(1.0f), translation);
+		//	glm::mat4 scale_m = glm::scale(glm::mat4(1.0f), scale);
+		//	glm::mat4 rotation_x = glm::rotate(rotation.x, glm::vec3(1.f, 0.f, 0.f));
+		//	glm::mat4 rotation_y = glm::rotate(rotation.y, glm::vec3(0.f, 1.f, 0.f));
+		//	glm::mat4 rotation_z = glm::rotate(rotation.z, glm::vec3(0.f, 0.f, 1.f));
+		//	glm::mat4 rotation_m = rotation_x * rotation_y * rotation_z;
+		//	glm::mat4 model = translation_m * rotation_m * scale_m;
+		//	glm::mat4 final_transform = projection * camera * model;
+		//	program->render(mesh, texture, &final_transform);
+		//}
 
 		// This renders the objects to the scene
 		glfwSwapBuffers(window);
@@ -344,6 +420,11 @@ int main(void)
 			should_stop_rendering = true;
 		if (space_key_state == Key_State::PRESSED)
 			camera_change = true;
+		if (h_key_state == Key_State::PRESSED)
+			if (light_change == false)
+				light_change = true;
+			else if (light_change == true)
+				light_change = false;
 		std::this_thread::sleep_for(std::chrono::milliseconds(15));
 	}
 }
