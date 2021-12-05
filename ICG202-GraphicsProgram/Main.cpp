@@ -396,10 +396,10 @@ int main(void)
 
 			glm::mat4 model = translation_m * rotation_m * scale_m;
 			glm::mat4 final_transform = projection * camera * model;
-			//if (!light_change)
+			if (!light_change)
 				program->render(hexagonal_pyramid_mesh, hexagonal_pyramid_texture, &final_transform);
-			//else
-			//	horror_program->render(hexagonal_pyramid_mesh, hexagonal_pyramid_texture, &final_transform);
+			else
+				horror_program->render(hexagonal_pyramid_mesh, hexagonal_pyramid_texture, &final_transform);
 		}
 		//{
 		//	glm::vec3 translation = glm::vec3(-1.0f, 1.5f, 0.0f);
@@ -422,7 +422,7 @@ int main(void)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glBindVertexArray(0);
 		glUseProgram(0);
-		a += 0.5f;
+		a += 0.05f;
 		b += 0.05f;
 		c += 0.0002f;
 		d += 0.004f;
