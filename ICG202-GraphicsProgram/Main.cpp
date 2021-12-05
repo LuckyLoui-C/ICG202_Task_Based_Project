@@ -22,6 +22,7 @@
 #include "Textured_3D_Shader_Program.h"
 #include "Textured_Lit_3D_Shader_Program.h"
 #include "Textured_Lit_Horror_3D_Shader_Program.h"
+#include "Textured_Lit_Light_3D_Shader_Program.h"
 #include "texture.h"
 #include "Cube_Mesh.h"
 #include "Hexagonal_Pyramid_Mesh.h"
@@ -44,6 +45,7 @@ Key_State a_key_state = Key_State::RELEASED;
 Key_State s_key_state = Key_State::RELEASED;
 Key_State d_key_state = Key_State::RELEASED;
 Key_State h_key_state = Key_State::RELEASED;
+Key_State t_key_state = Key_State::RELEASED;
 
 // OpenGL error calls this function
 void gl_debug_message_callback(GLenum, GLenum type, GLuint, GLenum severity,
@@ -87,6 +89,9 @@ void on_input(GLFWwindow*, int key, int, int action, int)
 			case GLFW_KEY_H:
 				h_key_state = Key_State::PRESSED;
 				break;
+			case GLFW_KEY_T:
+				t_key_state = Key_State::PRESSED;
+				break;
 			}
 			break;
 
@@ -113,6 +118,9 @@ void on_input(GLFWwindow*, int key, int, int action, int)
 				break;
 			case GLFW_KEY_H:
 				h_key_state = Key_State::RELEASED;
+				break;
+			case GLFW_KEY_T:
+				t_key_state = Key_State::RELEASED;
 				break;
 			}
 			break;
@@ -165,8 +173,6 @@ int main(void)
 	glfwSetKeyCallback(window, on_input);
 	glfwSetCursorPosCallback(window, cursor_postion_callback);
 
-
-
 	Shader* vertex_shader = new Shader("Shaders/textured.lit.3D.vertex_shader.glsl", Shader::Type::Vertex);
 	Shader* fragment_shader = new Shader("Shaders/textured.lit.3D.fragment_shader.glsl", Shader::Type::Fragment);
 	Textured_Lit_3D_Shader_Program* program = new Textured_Lit_3D_Shader_Program(vertex_shader, fragment_shader);
@@ -174,6 +180,10 @@ int main(void)
 	Shader* horror_vertex_shader = new Shader("Shaders/textured.lit.3D.vertex_shader.glsl", Shader::Type::Vertex);
 	Shader* horror_fragment_shader = new Shader("Shaders/textured.lit.3D.fragment_shader.glsl", Shader::Type::Fragment);
 	Textured_Lit_Horror_3D_Shader_Program* horror_program = new Textured_Lit_Horror_3D_Shader_Program(horror_vertex_shader, horror_fragment_shader);
+
+	Shader* light_vertex_shader = new Shader("Shaders/textured.light.3D.vertex_shader.glsl", Shader::Type::Vertex);
+	Shader* light_fragment_shader = new Shader("Shaders/textured.light.3D.fragment_shader.glsl", Shader::Type::Fragment);
+	Textured_Lit_Light_3D_Shader_Program* light_program = new Textured_Lit_Light_3D_Shader_Program(light_vertex_shader, light_fragment_shader);
 
 	Cube_Mesh* mesh = new Cube_Mesh();
 	Texture* texture = new Texture("Assets/texture.crate.jpg");
@@ -228,6 +238,7 @@ int main(void)
 	bool should_stop_rendering = false;
 	bool camera_change = false;
 	bool light_change = false;
+	bool torch_change = false;
 	while (should_stop_rendering == false)
 	{
 		if (escape_key_state == Key_State::PRESSED)
@@ -244,6 +255,8 @@ int main(void)
 			d_key_state = Key_State::HELD;
 		if (h_key_state == Key_State::PRESSED)
 			h_key_state = Key_State::HELD;
+		if (t_key_state == Key_State::PRESSED)
+			t_key_state = Key_State::HELD;
 
 		glm::vec2 mouse_translation = glm::vec2(mouse_x_position - previous_mouse_x_position, mouse_y_position - previous_mouse_y_position);
 		previous_mouse_x_position = mouse_x_position;
@@ -327,7 +340,7 @@ int main(void)
 
 		{
 			// Cube
-			glm::vec3 translation = glm::vec3(-1.0f, 0.5f, 0.0f);
+			glm::vec3 translation = glm::vec3(-1.0f, 0.0f, 0.0f);
 			glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 			glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
 
@@ -341,10 +354,10 @@ int main(void)
 
 			glm::mat4 model = translation_m * rotation_m * scale_m;
 			glm::mat4 final_transform = projection * camera * model;
-			//if (!light_change)
+			if (!torch_change)
 				program->render(mesh, texture, &final_transform);
-			//else
-			//	horror_program->render(mesh, texture, &final_transform);
+			else
+				light_program->render(mesh, texture, &final_transform);
 		}
 		{
 			// Robot
@@ -425,6 +438,11 @@ int main(void)
 				light_change = true;
 			else if (light_change == true)
 				light_change = false;
+		if (t_key_state == Key_State::PRESSED)
+			if (torch_change == false)
+				torch_change = true;
+			else if (torch_change == true)
+				torch_change = false;
 		std::this_thread::sleep_for(std::chrono::milliseconds(15));
 	}
 }

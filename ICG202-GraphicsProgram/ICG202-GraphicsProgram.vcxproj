@@ -161,6 +161,7 @@
     <ClCompile Include="Textured_3D_Shader_Program.cpp" />
     <ClCompile Include="Textured_Lit_3D_Shader_Program.cpp" />
     <ClCompile Include="Textured_Lit_Horror_3D_Shader_Program.cpp" />
+    <ClCompile Include="Textured_Lit_Light_3D_Shader_Program.cpp" />
     <ClCompile Include="Triangle_Mesh.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +182,7 @@
     <ClInclude Include="Textured_3D_Shader_Program.h" />
     <ClInclude Include="Textured_Lit_3D_Shader_Program.h" />
     <ClInclude Include="Textured_Lit_Horror_3D_Shader_Program.h" />
+    <ClInclude Include="Textured_Lit_Light_3D_Shader_Program.h" />
     <ClInclude Include="Triangle_Mesh.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

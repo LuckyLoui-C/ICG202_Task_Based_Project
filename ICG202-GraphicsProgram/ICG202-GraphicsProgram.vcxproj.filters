@@ -69,6 +69,9 @@
     <ClCompile Include="Textured_Lit_Horror_3D_Shader_Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Textured_Lit_Light_3D_Shader_Program.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mesh.h">
@@ -123,6 +126,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Textured_Lit_Horror_3D_Shader_Program.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Textured_Lit_Light_3D_Shader_Program.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

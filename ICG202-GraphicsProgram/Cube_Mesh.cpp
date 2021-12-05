@@ -33,6 +33,14 @@ Cube_Mesh::Cube_Mesh()
 	_texture_coordinates.insert(_texture_coordinates.end(), t4);
 	_verticies.insert(_verticies.end(), v1);
 	_texture_coordinates.insert(_texture_coordinates.end(), t1);
+	
+	_normals.insert(_normals.end(), { 0.0f, 0.0f, -1.0f });
+	_normals.insert(_normals.end(), { 0.0f, 0.0f, -1.0f });
+	_normals.insert(_normals.end(), { 0.0f, 0.0f, -1.0f });
+	_normals.insert(_normals.end(), { 0.0f, 0.0f, -1.0f });
+	_normals.insert(_normals.end(), { 0.0f, 0.0f, -1.0f });
+	_normals.insert(_normals.end(), { 0.0f, 0.0f, -1.0f });
+	
 	// Back face
 	// triangle 1
 	_verticies.insert(_verticies.end(), v8);
@@ -48,6 +56,14 @@ Cube_Mesh::Cube_Mesh()
 	_texture_coordinates.insert(_texture_coordinates.end(), t4);
 	_verticies.insert(_verticies.end(), v8);
 	_texture_coordinates.insert(_texture_coordinates.end(), t1);
+	
+	_normals.insert(_normals.end(), { 0.0f, 0.0f, 1.0f });
+	_normals.insert(_normals.end(), { 0.0f, 0.0f, 1.0f });
+	_normals.insert(_normals.end(), { 0.0f, 0.0f, 1.0f });
+	_normals.insert(_normals.end(), { 0.0f, 0.0f, 1.0f });
+	_normals.insert(_normals.end(), { 0.0f, 0.0f, 1.0f });
+	_normals.insert(_normals.end(), { 0.0f, 0.0f, 1.0f });
+
 	// Bottom Face
 	// triangle 1
 	_verticies.insert(_verticies.end(), v2);
@@ -63,6 +79,14 @@ Cube_Mesh::Cube_Mesh()
 	_texture_coordinates.insert(_texture_coordinates.end(), t4);
 	_verticies.insert(_verticies.end(), v2);
 	_texture_coordinates.insert(_texture_coordinates.end(), t1);
+	
+	_normals.insert(_normals.end(), { 0.0f, -1.0f, 0.0f });
+	_normals.insert(_normals.end(), { 0.0f, -1.0f, 0.0f });
+	_normals.insert(_normals.end(), { 0.0f, -1.0f, 0.0f });
+	_normals.insert(_normals.end(), { 0.0f, -1.0f, 0.0f });
+	_normals.insert(_normals.end(), { 0.0f, -1.0f, 0.0f });
+	_normals.insert(_normals.end(), { 0.0f, -1.0f, 0.0f });
+	
 	// Top Face
 	// triangle 1
 	_verticies.insert(_verticies.end(), v5);
@@ -78,6 +102,14 @@ Cube_Mesh::Cube_Mesh()
 	_texture_coordinates.insert(_texture_coordinates.end(), t4);
 	_verticies.insert(_verticies.end(), v5);
 	_texture_coordinates.insert(_texture_coordinates.end(), t1);
+	
+	_normals.insert(_normals.end(), { 0.0f, 1.0f, 0.0f });
+	_normals.insert(_normals.end(), { 0.0f, 1.0f, 0.0f });
+	_normals.insert(_normals.end(), { 0.0f, 1.0f, 0.0f });
+	_normals.insert(_normals.end(), { 0.0f, 1.0f, 0.0f });
+	_normals.insert(_normals.end(), { 0.0f, 1.0f, 0.0f });
+	_normals.insert(_normals.end(), { 0.0f, 1.0f, 0.0f });
+	
 	// Left Face
 	// triangle 1
 	_verticies.insert(_verticies.end(), v4);
@@ -93,6 +125,14 @@ Cube_Mesh::Cube_Mesh()
 	_texture_coordinates.insert(_texture_coordinates.end(), t4);
 	_verticies.insert(_verticies.end(), v4);
 	_texture_coordinates.insert(_texture_coordinates.end(), t1);
+	
+	_normals.insert(_normals.end(), { -1.0f, 0.0f, 0.0f });
+	_normals.insert(_normals.end(), { -1.0f, 0.0f, 0.0f });
+	_normals.insert(_normals.end(), { -1.0f, 0.0f, 0.0f });
+	_normals.insert(_normals.end(), { -1.0f, 0.0f, 0.0f });
+	_normals.insert(_normals.end(), { -1.0f, 0.0f, 0.0f });
+	_normals.insert(_normals.end(), { -1.0f, 0.0f, 0.0f });
+	
 	// Right Face
 	// triangle 1
 	_verticies.insert(_verticies.end(), v5);
@@ -108,6 +148,13 @@ Cube_Mesh::Cube_Mesh()
 	_texture_coordinates.insert(_texture_coordinates.end(), t4);
 	_verticies.insert(_verticies.end(), v5);
 	_texture_coordinates.insert(_texture_coordinates.end(), t1);
+
+	_normals.insert(_normals.end(), { 1.0f, 0.0f, 0.0f });
+	_normals.insert(_normals.end(), { 1.0f, 0.0f, 0.0f });
+	_normals.insert(_normals.end(), { 1.0f, 0.0f, 0.0f });
+	_normals.insert(_normals.end(), { 1.0f, 0.0f, 0.0f });
+	_normals.insert(_normals.end(), { 1.0f, 0.0f, 0.0f });
+	_normals.insert(_normals.end(), { 1.0f, 0.0f, 0.0f });
 }
 
 Cube_Mesh::~Cube_Mesh()

@@ -1,4 +1,4 @@
-#include "Textured_Lit_3D_Shader_Program.h"
+#include "Textured_Lit_Light_3D_Shader_Program.h"
 #include "Mesh.h"
 #include "Expectations.h"
 
@@ -8,16 +8,16 @@
 #include <random>
 #include <iostream>
 
-Textured_Lit_3D_Shader_Program::Textured_Lit_3D_Shader_Program(const Shader* vertex_shader, const Shader* fragment_shader)
+Textured_Lit_Light_3D_Shader_Program::Textured_Lit_Light_3D_Shader_Program(const Shader* vertex_shader, const Shader* fragment_shader)
 	: Shader_Program(vertex_shader, fragment_shader)
 {
 }
 
-Textured_Lit_3D_Shader_Program::~Textured_Lit_3D_Shader_Program()
+Textured_Lit_Light_3D_Shader_Program::~Textured_Lit_Light_3D_Shader_Program()
 {
 }
 
-void Textured_Lit_3D_Shader_Program::render(const Mesh* mesh, const Texture* texture, const glm::mat4* transformation) const
+void Textured_Lit_Light_3D_Shader_Program::render(const Mesh* mesh, const Texture* texture, const glm::mat4* transformation) const
 {
 
 	static std::default_random_engine generator;
@@ -41,6 +41,16 @@ void Textured_Lit_3D_Shader_Program::render(const Mesh* mesh, const Texture* tex
 	expect(vertex_location != -1, "Failed to get vertex_location");
 	glEnableVertexAttribArray(vertex_location);
 	glVertexAttribPointer(vertex_location, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+
+	GLuint normal_index;
+	glGenBuffers(1, &normal_index);
+	glBindBuffer(GL_ARRAY_BUFFER, normal_index);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * mesh->normals().size(), mesh->normals().data(), GL_STATIC_DRAW);
+
+	GLint normal_location = glGetAttribLocation(program(), "vertex_normal");
+	expect(normal_location != -1, "Failed to get normal_location");
+	glEnableVertexAttribArray(normal_location);
+	glVertexAttribPointer(normal_location, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
 	GLint transformation_location = glGetUniformLocation(program(), "transformation");
 	expect(transformation_location != -1, "Failed to find mask uniform location.");
@@ -70,27 +80,31 @@ void Textured_Lit_3D_Shader_Program::render(const Mesh* mesh, const Texture* tex
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+	
 	GLint image_location = glGetUniformLocation(program(), "image");
 	expect(image_location != -1, "Failed to find image uniform location.");
 	glUniform1i(image_location, 0);
-
+	
+	/*
 	GLint lighting_color_location = glGetUniformLocation(program(), "lighting_color");
 	expect(lighting_color_location != -1, "Failed to find lighting_color uniform location.");
-	glUniform3f(lighting_color_location, 0.9f, 0.9f, 0.9f);
+	glUniform3f(lighting_color_location, 0.8f, 0.5f, 0.15f);
+	*/
 
-	//GLint lighting_position_location = glGetUniformLocation(program(), "lighting_position");
-	//expect(lighting_position_location != -1, "Failed to find lighting_position uniform location.");
-	//glUniform3f(lighting_position_location, 0.0f, 0.0f, 0.0f);
-
+	GLint lighting_position_location = glGetUniformLocation(program(), "lighting_position");
+	expect(lighting_position_location != -1, "Failed to find lighting_position uniform location.");
+	glUniform3f(lighting_position_location, 0.0f, 0.0f, -1.0f);
+	
+	/*
 	GLint lighting_brightness_location = glGetUniformLocation(program(), "lighting_brightness");
 	expect(lighting_brightness_location != -1, "Failed to find lighting_brightness uniform location.");
-	glUniform1f(lighting_brightness_location, 1.0f/*(sinf(a) + cos(b))*/);
-	a += 0.1f; 
-	b += 0.05f;
+	glUniform1f(lighting_brightness_location, (sinf(a) + cos(b)));
+	*/
+	a += 0.0f; 
+	b += 0.5;
 
 	glDrawArrays(GL_TRIANGLES, 0, GLsizei(mesh->verticies().size() / 2));
 
 	glDeleteBuffers(1, &vbo_index);
-	glDeleteTextures(1, &texture_location);
+	//glDeleteTextures(1, &texture_location);
 }
